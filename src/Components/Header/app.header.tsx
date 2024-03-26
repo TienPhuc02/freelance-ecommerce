@@ -18,14 +18,14 @@ const HeaderComponent = () => {
       <div className="input-search-header flex ">
         <SearchOutlined className="text-[#cccccc] text-[20px]" />
         <Input
-          placeholder="Tìm kiếm ở đây....."
+          placeholder="Nhập tìm kiếm sản phẩm ở đây."
           variant="borderless"
           className="min-w-[1000px]"
         />
       </div>
       <div className="cart-header cursor-pointer w-[100px]">
         <Badge count={5}>
-          <ShoppingCartOutlined className="text-[32px] text-black/[0.88]" />
+          <ShoppingCartOutlined className="text-[32px] text-black opacity-50 font-extralight" />
         </Badge>
       </div>
       <div className="auth-header flex gap-2">

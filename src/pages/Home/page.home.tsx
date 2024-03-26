@@ -1,9 +1,12 @@
-import React from "react";
+import CarouselMain from "../../Components/Carousel/app.carousel";
 
 const PageHome = () => {
   return (
-    <div className="min-h-[600px] border border-green-500 pt-5 max-w-[1000px] mx-auto">
-      PageHome
+    <div className="min-h-[600px] pt-5 max-w-[1000px] mx-auto">
+      <p className="text-[20px]">Sản phẩm mới nhất</p>
+      <div className="carousel-slider-main">
+        <CarouselMain />
+      </div>
     </div>
   );
 };
