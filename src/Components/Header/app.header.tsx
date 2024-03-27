@@ -4,8 +4,8 @@ import React from "react";
 
 const HeaderComponent = () => {
   return (
-    <div className="h-[60px] flex items-center">
-      <a className="header-logo flex max-w-[300px] h-full items-center pl-[40px]">
+    <div className="h-[60px] flex items-center border-b shadow-sm">
+      <a className="header-logo flex min-w-[500px] h-full items-center pl-[40px]">
         <img
           className="h-[32px] w-[32px] mr-[12px]"
           src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
@@ -15,12 +15,12 @@ const HeaderComponent = () => {
           Shop IT
         </span>
       </a>
-      <div className="input-search-header flex ">
+      <div className="input-search-header flex min-w-[300px]">
         <SearchOutlined className="text-[#cccccc] text-[20px]" />
         <Input
           placeholder="Nhập tìm kiếm sản phẩm ở đây."
           variant="borderless"
-          className="min-w-[1000px]"
+          className="min-w-[700px]"
         />
       </div>
       <div className="cart-header cursor-pointer w-[100px]">
