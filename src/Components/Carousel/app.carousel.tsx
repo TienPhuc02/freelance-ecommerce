@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Carousel, Image, message, Pagination, Rate } from "antd";
+import { Button, Carousel, Image, message, Rate } from "antd";
 import "./style.carousel.css";
 import { APIGetAllProduct } from "../../services/api";
 
