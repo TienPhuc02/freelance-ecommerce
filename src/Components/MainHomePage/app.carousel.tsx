@@ -73,7 +73,7 @@ const CarouselMain: React.FC = () => {
           allProduct.map((product: any) => {
             return (
               <div key={product?._id}>
-                <div className="mx-[10px] h-[400px] mt-[50px] border ">
+                <div className="mx-[10px] h-[400px] cursor-pointer mt-[50px] border hover:shadow-xl rounded-lg">
                   <Image
                     height={200}
                     className="object-cover"
@@ -82,7 +82,7 @@ const CarouselMain: React.FC = () => {
                     alt="Image Product"
                   />
                   <div className="info-product-item px-2">
-                    <p className="text-center min-h-[50px]">{product.name}</p>
+                    <p className="text-center min-h-[50px] hover:text-[#167fff]">{product.name}</p>
                     <div className="rating-review flex">
                       <Rate
                         disabled

@@ -44,8 +44,8 @@ const HeaderComponent = () => {
           Shop IT
         </span>
       </a>
-      <div className="input-search-header flex min-w-[300px]">
-        <Form form={form} className="flex justify-center items-center">
+      <div className="input-search-header min-w-[300px]">
+        <Form form={form} className="flex items-center">
           <Form.Item>
             <SearchOutlined
               type="submit"
