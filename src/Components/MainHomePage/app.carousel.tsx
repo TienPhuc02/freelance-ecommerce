@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import { Button, Carousel, Image, message, Rate } from "antd";
 import "./style.carousel.css";
 import { APIGetAllProduct } from "../../services/api";
+import { useDispatch } from "react-redux";
+import { setArrayCategory } from "../../redux/features/category/categorySlice";
 
 const SampleNextArrow = (props: any) => {
   const { className, style, onClick } = props;
@@ -44,6 +46,7 @@ const settings = {
 const CarouselMain: React.FC = () => {
   const [allProduct, setAllProduct] = useState([]);
   const [arrayListCategory, setArrayListCategory] = useState<string[]>([]);
+  const dispatch = useDispatch();
   const onChange = (currentSlide: number) => {
     console.log(currentSlide);
   };
@@ -67,7 +70,13 @@ const CarouselMain: React.FC = () => {
     getAllProduct();
   }, []);
   console.log(allProduct);
-  console.log(arrayListCategory);
+  if (arrayListCategory.length !== 0) {
+    // dispatch(setArrayCategory(arrayListCategory));
+    const stringifiedCategories = JSON.stringify(arrayListCategory);
+
+    // Store the string in localStorage
+    localStorage.setItem("arrayCategory", stringifiedCategories);
+  }
   return (
     <>
       <Carousel
