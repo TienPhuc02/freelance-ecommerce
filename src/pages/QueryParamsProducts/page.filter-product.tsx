@@ -1,16 +1,15 @@
 import { useParams } from "react-router-dom";
 import { APIGetAllProduct } from "../../services/api";
 import { useEffect, useState } from "react";
-import { Divider, Input, message, Tooltip } from "antd";
-interface NumericInputProps {
-  style: React.CSSProperties;
-  value: string;
-  onChange: (value: string) => void;
-}
+import { Button, Divider, Form, FormProps, InputNumber, message } from "antd";
+import { Checkbox, Col, Row } from "antd";
+import type { GetProp } from "antd";
+type FieldType = {
+  pricegt?: string;
+  pricelt?: string;
+};
 const MainFilterProduct = () => {
   const [allProductFilter, setAllProductFilter] = useState([]);
-  const [valueInputPriceLeft, setValueInputPriceLeft] = useState("");
-  const [valueInputPriceRight, setValueInputPriceRight] = useState("");
   const { slug } = useParams<string>();
   console.log(slug);
 
@@ -33,95 +32,24 @@ const MainFilterProduct = () => {
     getProductFilterKeyWord();
   }, [slug]);
 
-  const formatNumber = (value: number) => new Intl.NumberFormat().format(value);
-
-  const NumericInputLeft = (props: NumericInputProps) => {
-    const { value, onChange } = props;
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { value: inputValue } = e.target;
-      const reg = /^-?\d*(\.\d*)?$/;
-      if (reg.test(inputValue) || inputValue === "" || inputValue === "-") {
-        onChange(inputValue);
-      }
-    };
-
-    // '.' at the end or only '-' in the input box.
-    const handleBlur = () => {
-      let valueTemp = value;
-      if (value.charAt(value.length - 1) === "." || value === "-") {
-        valueTemp = value.slice(0, -1);
-      }
-      onChange(valueTemp.replace(/0*(\d+)/, "$1"));
-    };
-
-    const title = value ? (
-      <span className="numeric-input-title">
-        {value !== "-" ? formatNumber(Number(value)) : "-"}
-      </span>
-    ) : (
-      "Nhập giá trị tối thiểu"
-    );
-
-    return (
-      <Tooltip
-        trigger={["focus"]}
-        title={title}
-        placement="topLeft"
-        overlayClassName="numeric-input"
-      >
-        <Input
-          {...props}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          placeholder="Giá trị tối thiểu"
-          maxLength={16}
-        />
-      </Tooltip>
-    );
+  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+    console.log("Success:", values);
   };
-  const NumericInputRight = (props: NumericInputProps) => {
-    const { value, onChange } = props;
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-      const { value: inputValue } = e.target;
-      const reg = /^-?\d*(\.\d*)?$/;
-      if (reg.test(inputValue) || inputValue === "" || inputValue === "-") {
-        onChange(inputValue);
-      }
-    };
-    const handleBlur = () => {
-      let valueTemp = value;
-      if (value.charAt(value.length - 1) === "." || value === "-") {
-        valueTemp = value.slice(0, -1);
-      }
-      onChange(valueTemp.replace(/0*(\d+)/, "$1"));
-    };
-
-    const title = value ? (
-      <span className="numeric-input-title">
-        {value !== "-" ? formatNumber(Number(value)) : "-"}
-      </span>
-    ) : (
-      "Nhập giá trị tối đa"
-    );
-
-    return (
-      <Tooltip
-        trigger={["focus"]}
-        title={title}
-        placement="topLeft"
-        overlayClassName="numeric-input"
-      >
-        <Input
-          {...props}
-          onChange={handleChange}
-          onBlur={handleBlur}
-          placeholder="Giá trị tối đa"
-          maxLength={16}
-        />
-      </Tooltip>
-    );
+  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
+    errorInfo
+  ) => {
+    console.log("Failed:", errorInfo);
+  };
+  const onChangeInputLeft = (value: number | null) => {
+    console.log("changed", value);
+  };
+  const onChangeInputRight = (value: number | null) => {
+    console.log("changed", value);
+  };
+  const onChangeCheckBox: GetProp<typeof Checkbox.Group, "onChange"> = (
+    checkedValues
+  ) => {
+    console.log("checked = ", checkedValues);
   };
   return (
     <div className="min-h-[600px] pt-5 max-w-[1200px]  mx-auto">
@@ -135,18 +63,67 @@ const MainFilterProduct = () => {
           <Divider />
           <div className="filter-price">
             <p className="mb-3">Lọc theo giá</p>
-            <div className="form-filter-price flex gap-3">
-              <NumericInputLeft
-                style={{ width: 120 }}
-                value={valueInputPriceLeft}
-                onChange={setValueInputPriceLeft}
-              />
-              <NumericInputRight
-                style={{ width: 120 }}
-                value={valueInputPriceRight}
-                onChange={setValueInputPriceRight}
-              />
-            </div>
+            <Form
+              className="form-filter-price w-full"
+              name="basic"
+              onFinish={onFinish}
+              onFinishFailed={onFinishFailed}
+            >
+              <div className="flex gap-3 ">
+                <Form.Item<FieldType> name="pricegt">
+                  <InputNumber
+                    min={0}
+                    max={1000}
+                    placeholder="Giá trị tối thiểu"
+                    onChange={onChangeInputLeft}
+                    className="w-[130px]"
+                  />
+                </Form.Item>
+                <Form.Item<FieldType> name="pricelt">
+                  <InputNumber
+                    min={1}
+                    className="w-[130px]"
+                    max={1000}
+                    placeholder="Giá trị tối đa"
+                    width={140}
+                    onChange={onChangeInputRight}
+                  />
+                </Form.Item>
+              </div>
+              <Button
+                type="primary"
+                htmlType="submit"
+                className="w-full bg-[#167fff]"
+              >
+                Lọc sản phẩm theo giá
+              </Button>
+            </Form>
+          </div>
+          <Divider />
+          <p>Phân loại</p>
+          <div className="checkbox-filter">
+            <Checkbox.Group
+              style={{ width: "100%" }}
+              onChange={onChangeCheckBox}
+            >
+              <Row>
+                <Col span={24}>
+                  <Checkbox value="A">A</Checkbox>
+                </Col>
+                <Col span={24}>
+                  <Checkbox value="B">B</Checkbox>
+                </Col>
+                <Col span={24}>
+                  <Checkbox value="C">C</Checkbox>
+                </Col>
+                <Col span={24}>
+                  <Checkbox value="D">D</Checkbox>
+                </Col>
+                <Col span={24}>
+                  <Checkbox value="E">E</Checkbox>
+                </Col>
+              </Row>
+            </Checkbox.Group>
           </div>
         </div>
 

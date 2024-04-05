@@ -43,6 +43,7 @@ const settings = {
 };
 const CarouselMain: React.FC = () => {
   const [allProduct, setAllProduct] = useState([]);
+  const [arrayListCategory, setArrayListCategory] = useState<string[]>([]);
   const onChange = (currentSlide: number) => {
     console.log(currentSlide);
   };
@@ -52,12 +53,21 @@ const CarouselMain: React.FC = () => {
     if (allProduct && allProduct.data) {
       message.success(allProduct.data.message);
       setAllProduct(allProduct.data.products);
+      const categories = allProduct.data.products.map(
+        (product: any) => product.category
+      ) as string[];
+      const uniqueCategories = Array.from(new Set(categories));
+      setArrayListCategory((prevCategories) => [
+        ...prevCategories,
+        ...uniqueCategories,
+      ]);
     }
   };
   useEffect(() => {
     getAllProduct();
   }, []);
   console.log(allProduct);
+  console.log(arrayListCategory);
   return (
     <>
       <Carousel
@@ -82,7 +92,9 @@ const CarouselMain: React.FC = () => {
                     alt="Image Product"
                   />
                   <div className="info-product-item px-2">
-                    <p className="text-center min-h-[50px] hover:text-[#167fff]">{product.name}</p>
+                    <p className="text-center min-h-[50px] hover:text-[#167fff]">
+                      {product.name}
+                    </p>
                     <div className="rating-review flex">
                       <Rate
                         disabled
