@@ -7,8 +7,7 @@ const ProductFiltered = ({ allProductFilter }: PropsType) => {
   console.log(allProductFilter);
   return (
     <div className="product-filtered w-[800px] grid grid-cols-2 mb-2">
-      {allProductFilter &&
-        allProductFilter.length !== 0 &&
+      {allProductFilter.length !== 0 &&
         allProductFilter.map((product: any) => {
           return (
             <div key={product?._id}>

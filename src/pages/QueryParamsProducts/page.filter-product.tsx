@@ -1,44 +1,71 @@
 import { useParams, useSearchParams } from "react-router-dom";
 import { APIGetAllProduct } from "../../services/api";
 import { useEffect, useState } from "react";
-import { Checkbox, GetProp, message } from "antd";
-
+import { Checkbox, Form, FormProps, GetProp, message } from "antd";
 import FilterComponent from "../../Components/MainQueryProducts/component.filter-product";
 import ProductFiltered from "../../Components/MainQueryProducts/component.product-filtered";
-
+type FieldType = {
+  pricegt?: string;
+  pricelt?: string;
+};
 const MainFilterProduct = () => {
+  const [form] = Form.useForm();
   const [allProductFilter, setAllProductFilter] = useState([]);
   const [arrayCategory, setArrayCategory] = useState<string[]>([]);
   const storedCategories = localStorage.getItem("arrayCategory");
   const [qCategory, setQCategory] = useState<string>("");
   const [qRating, setQRating] = useState<string>("");
+  const [qPrice, setQPrice] = useState<string>("");
   const { slug } = useParams<string>();
-  const [searchParams, setSearchParams] = useSearchParams();
-  const getProductFilterKeyWord = async () => {
-    if (slug || qCategory !== "" || qRating !== "") {
-      const res = await APIGetAllProduct(slug, qCategory, qRating, null, null);
-      console.log(res);
-      if (res.data && res.data.filteredProductCount !== 0) {
-        setAllProductFilter(res.data.products);
-        message.success(`Lấy sản phẩm với từ khóa là "${slug?.split("=")[1]}"`);
-      } else {
-        message.error(
-          `Không tìm thấy sản phẩm với từ khóa là "${slug?.split("=")[1]}"`
-        );
+  const getProductFilter = async () => {
+    let queryParams = "";
+    try {
+      if (slug) {
+        queryParams += `keyword=${slug.split("=")[1]}&`;
       }
+      if (qCategory) {
+        queryParams += `${qCategory}&`;
+      }
+      if (qRating) {
+        queryParams += `${qRating}&`;
+      }
+      if (qPrice) {
+        queryParams += `${qPrice}&`;
+      }
+
+      // Kiểm tra xem có tham số nào được truyền vào không
+      if (queryParams !== "") {
+        // Loại bỏ dấu & cuối cùng
+        if (queryParams.endsWith("&")) {
+          queryParams = queryParams.slice(0, -1);
+        }
+        console.log(queryParams);
+        const res = await APIGetAllProduct(queryParams);
+        if (res && res.data) {
+          setAllProductFilter(res.data.products);
+          message.success(
+            `Lấy sản phẩm với từ khóa là "${slug?.split("=")[1]}"`
+          );
+        } else {
+          message.error(
+            `Không tìm thấy sản phẩm với từ khóa là "${slug?.split("=")[1]}"`
+          );
+        }
+      }
+    } catch (error) {
+      console.error("Error fetching products:", error);
+      message.error("Đã xảy ra lỗi khi lấy sản phẩm");
     }
   };
 
   const onChangeCheckBoxCategory: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues
   ) => {
-    console.log(checkedValues);
     let qCategory: string = "";
     for (let i = 0; i < checkedValues.length; i++) {
       qCategory += `category=${checkedValues[i]}`;
-      console.log(qCategory);
     }
-    setSearchParams(qCategory);
+    // setSearchParams(qCategory);
     setQCategory(qCategory);
   };
   const onChangeCheckBoxRate: GetProp<typeof Checkbox.Group, "onChange"> = (
@@ -49,20 +76,32 @@ const MainFilterProduct = () => {
       qRating = `ratings[gte]=${checkedValues[i]}`;
       console.log(qRating);
     }
-    setSearchParams(qRating);
     setQRating(qRating);
-    console.log(checkedValues);
+  };
+  const onFinishFilterPrice: FormProps<FieldType>["onFinish"] = (values) => {
+    console.log("Success:", values);
+    let queryPrice = "";
+    queryPrice = `price[gt]=${values.pricegt}&price[lt]=${values.pricelt}`;
+    setQPrice(queryPrice);
+  };
+  const onFinishFailedFilterPrice = (errorInfo: any) => {
+    console.log("Failed:", errorInfo);
+  };
+  const onChangeInputGTPrice = (value: number | null) => {
+    console.log("changed", value);
+  };
+  const onChangeInputLTPrice = (value: number | null) => {
+    console.log("changed", value);
   };
   useEffect(() => {
-    getProductFilterKeyWord();
+    getProductFilter();
     if (storedCategories) {
       const parsedCategories = JSON.parse(storedCategories);
       setArrayCategory(parsedCategories);
     }
-  }, [slug, qCategory, qRating]);
+  }, [qCategory, qRating, qPrice]);
 
   console.log(allProductFilter);
-  console.log(searchParams);
   return (
     <div className=" pt-5 max-w-[1200px] mx-auto">
       <div className="text-[25px] mb-[20px]">
@@ -81,6 +120,11 @@ const MainFilterProduct = () => {
           arrayCategory={arrayCategory}
           onChangeCheckBoxCategory={onChangeCheckBoxCategory}
           onChangeCheckBoxRate={onChangeCheckBoxRate}
+          onChangeInputGTPrice={onChangeInputGTPrice}
+          onChangeInputLTPrice={onChangeInputLTPrice}
+          onFinishFilterPrice={onFinishFilterPrice}
+          formPrice={form}
+          onFinishFailedFilterPrice={onFinishFailedFilterPrice}
         />
         <ProductFiltered allProductFilter={allProductFilter} />
       </div>

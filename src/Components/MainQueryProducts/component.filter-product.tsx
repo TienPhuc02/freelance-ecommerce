@@ -1,6 +1,6 @@
-import { Button, Divider, Form, FormProps, InputNumber, Rate } from "antd";
+import { Button, Divider, Form, InputNumber, Rate } from "antd";
 import { Checkbox, Col, Row } from "antd";
-import type { GetProp } from "antd";
+import type { FormInstance, GetProp } from "antd";
 type FieldType = {
   pricegt?: string;
   pricelt?: string;
@@ -9,26 +9,22 @@ type PropsType = {
   arrayCategory: string[];
   onChangeCheckBoxCategory: GetProp<any, "onChange">;
   onChangeCheckBoxRate: GetProp<any, "onChange">;
+  onChangeInputGTPrice: (value: number | null) => void;
+  onChangeInputLTPrice: (value: number | null) => void;
+  onFinishFilterPrice: (values: FieldType) => void;
+  onFinishFailedFilterPrice: (errorInfo: any) => void;
+  formPrice: FormInstance<any>;
 };
 const FilterComponent = ({
   arrayCategory,
   onChangeCheckBoxCategory,
   onChangeCheckBoxRate,
+  onChangeInputGTPrice,
+  onChangeInputLTPrice,
+  onFinishFilterPrice,
+  onFinishFailedFilterPrice,
+  formPrice,
 }: PropsType) => {
-  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
-    console.log("Success:", values);
-  };
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
-    errorInfo
-  ) => {
-    console.log("Failed:", errorInfo);
-  };
-  const onChangeInputLeft = (value: number | null) => {
-    console.log("changed", value);
-  };
-  const onChangeInputRight = (value: number | null) => {
-    console.log("changed", value);
-  };
   const arrayRating = [5, 4, 3, 2, 1];
   return (
     <div className="filter-left-content w-[300px] p-2 ">
@@ -37,10 +33,11 @@ const FilterComponent = ({
       <div className="filter-price">
         <p className="mb-3">Lọc theo giá</p>
         <Form
+          form={formPrice}
           className="form-filter-price w-full"
           name="basic"
-          onFinish={onFinish}
-          onFinishFailed={onFinishFailed}
+          onFinish={onFinishFilterPrice}
+          onFinishFailed={onFinishFailedFilterPrice}
         >
           <div className="flex gap-3 ">
             <Form.Item<FieldType> name="pricegt">
@@ -48,7 +45,7 @@ const FilterComponent = ({
                 min={0}
                 max={1000}
                 placeholder="Giá trị tối thiểu"
-                onChange={onChangeInputLeft}
+                onChange={onChangeInputGTPrice}
                 className="w-[130px]"
               />
             </Form.Item>
@@ -59,7 +56,7 @@ const FilterComponent = ({
                 max={1000}
                 placeholder="Giá trị tối đa"
                 width={140}
-                onChange={onChangeInputRight}
+                onChange={onChangeInputLTPrice}
               />
             </Form.Item>
           </div>
