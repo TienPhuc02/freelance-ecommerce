@@ -1,10 +1,11 @@
 import axios from "../configs/customize.api";
 export const APIGetAllProduct = (
+  params: string = "",
   query: string = "",
-  currentPage?: number,
-  pageSize?: number
+  currentPage?: number | null,
+  pageSize?: number | null
 ) => {
   return axios.get(
-    `products?currentPage=${currentPage}&pageSize=${pageSize}&${query}`
+    `products?currentPage=${currentPage}&pageSize=${pageSize}&${params}&${query}`
   );
 };

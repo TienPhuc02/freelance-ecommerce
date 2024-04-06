@@ -1,7 +1,7 @@
 import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
 import { Badge, Button, Form, Input } from "antd";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import useDebounce from "../../hooks/useDebounce";
 
 const HeaderComponent = () => {
@@ -31,18 +31,17 @@ const HeaderComponent = () => {
   };
   return (
     <div className="h-[60px] flex items-center border-b shadow-sm">
-      <a
-        href="/"
-        className="header-logo flex min-w-[500px] h-full items-center pl-[40px] cursor-pointer"
-      >
-        <img
-          className="h-[32px] w-[32px] mr-[12px]"
-          src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-          alt=""
-        />
-        <span className="text-[18px] font-semibold min-w-[90px] leading-8 ">
-          Shop IT
-        </span>
+      <a className="header-logo flex min-w-[500px] h-full items-center pl-[40px] cursor-pointer">
+        <Link to={"/"} className="flex">
+          <img
+            className="h-[32px] w-[32px] mr-[12px]"
+            src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
+            alt=""
+          />
+          <span className="text-[18px] font-semibold min-w-[90px] leading-8 ">
+            Shop IT
+          </span>
+        </Link>
       </a>
       <div className="input-search-header min-w-[300px]">
         <Form form={form} className="flex items-center">
