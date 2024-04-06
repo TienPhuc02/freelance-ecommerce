@@ -11,11 +11,12 @@ const MainFilterProduct = () => {
   const [arrayCategory, setArrayCategory] = useState<string[]>([]);
   const storedCategories = localStorage.getItem("arrayCategory");
   const [qCategory, setQCategory] = useState<string>("");
+  const [qRating, setQRating] = useState<string>("");
   const { slug } = useParams<string>();
   const [searchParams, setSearchParams] = useSearchParams();
   const getProductFilterKeyWord = async () => {
-    if (slug || qCategory !== "") {
-      const res = await APIGetAllProduct(slug, qCategory, null, null);
+    if (slug || qCategory !== "" || qRating !== "") {
+      const res = await APIGetAllProduct(slug, qCategory, qRating, null, null);
       console.log(res);
       if (res.data && res.data.filteredProductCount !== 0) {
         setAllProductFilter(res.data.products);
@@ -43,6 +44,13 @@ const MainFilterProduct = () => {
   const onChangeCheckBoxRate: GetProp<typeof Checkbox.Group, "onChange"> = (
     checkedValues
   ) => {
+    let qRating: string = "";
+    for (let i = 0; i < checkedValues.length; i++) {
+      qRating = `ratings[gte]=${checkedValues[i]}`;
+      console.log(qRating);
+    }
+    setSearchParams(qRating);
+    setQRating(qRating);
     console.log(checkedValues);
   };
   useEffect(() => {
@@ -51,7 +59,7 @@ const MainFilterProduct = () => {
       const parsedCategories = JSON.parse(storedCategories);
       setArrayCategory(parsedCategories);
     }
-  }, [slug, qCategory]);
+  }, [slug, qCategory, qRating]);
 
   console.log(allProductFilter);
   console.log(searchParams);
