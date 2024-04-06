@@ -1,4 +1,4 @@
-import { useParams, useSearchParams } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { APIGetAllProduct } from "../../services/api";
 import { useEffect, useState } from "react";
 import { Checkbox, Form, FormProps, GetProp, message } from "antd";
