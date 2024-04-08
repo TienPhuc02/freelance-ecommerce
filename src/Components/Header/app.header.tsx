@@ -71,7 +71,13 @@ const HeaderComponent = () => {
         </Badge>
       </div>
       <div className="auth-header flex gap-2">
-        <Button onClick={handleRedirectLogin}>Đăng Nhập</Button>
+        <Button
+          onClick={handleRedirectLogin}
+          type="primary"
+          className="bg-[#167fff]"
+        >
+          Đăng Nhập
+        </Button>
         <Button onClick={handleRedirectSignUp}>Đăng Ký</Button>
       </div>
     </div>

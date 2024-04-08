@@ -24,3 +24,22 @@
   > img {
   object-fit: cover;
 }
+body
+  > div:nth-child(3)
+  > div
+  > div.ant-modal-wrap
+  > div
+  > div:nth-child(2)
+  > div
+  > div
+  > div
+  > div.ant-col.ant-col-16.css-dev-only-do-not-override-1drr2mu
+  > div
+  > div
+  > div
+  > div
+  > div
+  > div.image-gallery-slide.image-gallery-center
+  > img {
+  height: 500px;
+}

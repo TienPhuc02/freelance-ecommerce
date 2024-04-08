@@ -1,5 +1,6 @@
 import React from "react";
-import SlickDetail from "../../Components/DetailProduct/slick-detail";
+import SlickDetail from "../../Components/DetailProduct/SlickDetails";
+
 
 const DetailProductPage = () => {
   return (
