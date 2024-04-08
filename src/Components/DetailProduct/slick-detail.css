@@ -1,0 +1,26 @@
+@import url("../../../node_modules/react-image-gallery/styles/css/image-gallery.css");
+#root
+  > div
+  > div.max-w-\[1200px\].mx-auto
+  > div
+  > div
+  > div
+  > div.image-gallery-slide-wrapper.image-gallery-thumbnails-bottom
+  > div
+  > div
+  > div.image-gallery-slide.image-gallery-center {
+  height: 450px;
+}
+#root
+  > div
+  > div.max-w-\[1200px\].mx-auto
+  > div
+  > div
+  > div
+  > div.image-gallery-slide-wrapper.image-gallery-thumbnails-bottom
+  > div
+  > div
+  > div.image-gallery-slide.image-gallery-center
+  > img {
+  object-fit: cover;
+}

@@ -1,11 +1,7 @@
 import axios from "../configs/customize.api";
-export const APIGetAllProduct = (
-  queryParam: string = ""
-  // queryCategory: string = "",
-  // queryRating: string = "",
-  // queryPrice: string = ""
-  // currentPage?: number | null,
-  // pageSize?: number | null
-) => {
+export const APIGetAllProduct = (queryParam: string = "") => {
   return axios.get(`products?${queryParam}`);
+};
+export const APIGetDetailProduct = (id: string | undefined) => {
+  return axios.get(`products/${id}`);
 };

@@ -32,10 +32,7 @@ const MainFilterProduct = () => {
       if (qPrice) {
         queryParams += `${qPrice}&`;
       }
-
-      // Kiểm tra xem có tham số nào được truyền vào không
       if (queryParams !== "") {
-        // Loại bỏ dấu & cuối cùng
         if (queryParams.endsWith("&")) {
           queryParams = queryParams.slice(0, -1);
         }

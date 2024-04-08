@@ -31,7 +31,7 @@ const HeaderComponent = () => {
   };
   return (
     <div className="h-[60px] flex items-center border-b shadow-sm">
-      <a className="header-logo flex min-w-[500px] h-full items-center pl-[40px] cursor-pointer">
+      <div className="header-logo flex min-w-[500px] h-full items-center pl-[40px] cursor-pointer">
         <Link to={"/"} className="flex">
           <img
             className="h-[32px] w-[32px] mr-[12px]"
@@ -42,7 +42,7 @@ const HeaderComponent = () => {
             Shop IT
           </span>
         </Link>
-      </a>
+      </div>
       <div className="input-search-header min-w-[300px]">
         <Form form={form} className="flex items-center">
           <Form.Item>

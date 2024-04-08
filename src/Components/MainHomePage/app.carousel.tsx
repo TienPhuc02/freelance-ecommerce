@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Button, Carousel, Image, message, Rate } from "antd";
 import "./style.carousel.css";
 import { APIGetAllProduct } from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 const SampleNextArrow = (props: any) => {
   const { className, style, onClick } = props;
@@ -12,6 +13,7 @@ const SampleNextArrow = (props: any) => {
         ...style,
         color: "black",
         fontSize: "30px",
+        display: "block",
         lineHeight: "1.5715",
       }}
       onClick={onClick}
@@ -29,6 +31,7 @@ const SamplePrevArrow = (props: any) => {
         color: "black",
         fontSize: "30px",
         lineHeight: "1.5715",
+        display: "block",
         border: 1,
         borderWidth: 2,
       }}
@@ -38,12 +41,17 @@ const SamplePrevArrow = (props: any) => {
 };
 
 const settings = {
+  dots: true,
+  infinite: true,
+  slidesToShow: 3,
+  slidesToScroll: 1,
   nextArrow: <SampleNextArrow />,
   prevArrow: <SamplePrevArrow />,
 };
 const CarouselMain: React.FC = () => {
   const [allProduct, setAllProduct] = useState([]);
   const [arrayListCategory, setArrayListCategory] = useState<string[]>([]);
+  const navigate = useNavigate();
   const onChange = (currentSlide: number) => {
     console.log(currentSlide);
   };
@@ -76,8 +84,6 @@ const CarouselMain: React.FC = () => {
       <Carousel
         arrows
         afterChange={onChange}
-        slidesToShow={3}
-        slidesToScroll={1}
         {...settings}
         dots={false}
         focusOnSelect={true}
@@ -85,7 +91,10 @@ const CarouselMain: React.FC = () => {
         {allProduct.length !== 0 &&
           allProduct.map((product: any) => {
             return (
-              <div key={product?._id}>
+              <div
+                key={product?._id}
+                onClick={() => navigate(`/product/${product._id}`)}
+              >
                 <div className="mx-[10px] h-[400px] cursor-pointer mt-[50px] border hover:shadow-xl rounded-lg">
                   <Image
                     height={200}
@@ -104,7 +113,7 @@ const CarouselMain: React.FC = () => {
                         defaultValue={product.ratings}
                         className="mr-2"
                       />
-                      <span>({product.numOfReview})</span>
+                      <span>({product.stock})</span>
                     </div>
                     <div className="mt-[10px] font-medium text-[25px]">
                       ${product.price}
