@@ -13,7 +13,7 @@ const SlickDetail = ({ images }: { images: any }) => {
   };
   console.log(images);
   return (
-    <div className="max-w-[500px] mr-[50px]">
+    <div className="w-[500px] mr-[50px]">
       {images.length !== 0 && (
         <ImageGallery
           ref={refGallery}

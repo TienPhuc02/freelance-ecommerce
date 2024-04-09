@@ -6,15 +6,18 @@ import {
   FormProps,
   InputNumber,
   InputNumberProps,
+  message,
   Rate,
 } from "antd";
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 interface FieldType {
   valueQuantity: number;
 }
 const InforDetailProduct = ({ productDetail }: { productDetail: any }) => {
   const [rate, setRate] = useState<number | undefined>(undefined);
-  const [valueQuantity, setValueQuantity] = useState(1);
+  const navigate = useNavigate();
+  const [valueQuantity, setValueQuantity] = useState(0);
   const [form] = Form.useForm();
   const onChange: InputNumberProps["onChange"] = (value: any) => {
     setValueQuantity(value);
@@ -33,14 +36,18 @@ const InforDetailProduct = ({ productDetail }: { productDetail: any }) => {
       const newValue = valueQuantity + 1;
       setValueQuantity(newValue);
       form.setFieldsValue({ valueQuantity: newValue });
+    } else {
+      message.error("Sản phẩm đã hết hàng");
     }
   };
 
   const DecreaseInput = () => {
-    if (valueQuantity > 1) {
+    if (valueQuantity > 0) {
       const newValue = valueQuantity - 1;
       setValueQuantity(newValue);
       form.setFieldsValue({ valueQuantity: newValue });
+    } else {
+      message.error("Tối thiểu số sản phẩm là 0");
     }
   };
   useEffect(() => {
@@ -76,10 +83,10 @@ const InforDetailProduct = ({ productDetail }: { productDetail: any }) => {
           </Button>
           <Form.Item name={"valueQuantity"}>
             <InputNumber
-              min={1}
+              min={0}
               max={productDetail.stock}
               value={valueQuantity}
-              defaultValue={1}
+              defaultValue={0}
               onChange={onChange}
             />
           </Form.Item>
@@ -100,6 +107,29 @@ const InforDetailProduct = ({ productDetail }: { productDetail: any }) => {
         </Form>
       </div>
       <Divider className="my-2" />
+      <div className="status-stock text-[15px]">
+        Status :{" "}
+        {productDetail.stock > 0 ? (
+          <span className="text-green-400">In Stock</span>
+        ) : (
+          <span className="text-red-500">Out Of Stock</span>
+        )}
+      </div>
+      <Divider className="my-2" />
+      <div className="description-product text-[20px] font-semibold">
+        Description:
+      </div>
+      <p className="leading-6">{productDetail.description}</p>
+      <Divider className="my-2" />
+      <p className="mb-3">Sold by : {productDetail.seller}</p>
+      <Button
+        type="text"
+        danger
+        className="pl-0"
+        onClick={() => navigate("/login")}
+      >
+        Hãy đăng nhập để có thể gửi đánh giá của bạn
+      </Button>
     </div>
   );
 };

@@ -76,9 +76,9 @@ const HeaderComponent = () => {
           type="primary"
           className="bg-[#167fff]"
         >
-          Đăng Nhập
+          Log In
         </Button>
-        <Button onClick={handleRedirectSignUp}>Đăng Ký</Button>
+        <Button onClick={handleRedirectSignUp}>Sign Up</Button>
       </div>
     </div>
   );
