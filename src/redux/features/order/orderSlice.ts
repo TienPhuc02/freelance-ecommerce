@@ -18,7 +18,6 @@ export const orderSlice = createSlice({
   reducers: {
     doProductAction: (state, action) => {
       const item = action.payload;
-
       console.log(item);
       const isExistIndex = state.cart.findIndex((c) => {
         console.log("ttt", c);
@@ -34,7 +33,7 @@ export const orderSlice = createSlice({
         state.cart.push({
           quantity: item.quantity,
           id: item.detail._id,
-          detail: item.detail,
+          detail: { ...item.detail, stock: item.detail.stock - item.quantity },
         });
       }
     },
