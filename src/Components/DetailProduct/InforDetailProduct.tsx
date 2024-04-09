@@ -3,59 +3,48 @@ import {
   Button,
   Divider,
   Form,
+  FormInstance,
   FormProps,
   InputNumber,
-  InputNumberProps,
-  message,
   Rate,
 } from "antd";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-interface FieldType {
-  valueQuantity: number;
+interface PropInForProduct {
+  DecreaseInput: () => void;
+  IncreaseInput: () => void;
+  valueQuantityNumber: number;
+  form: FormInstance<any>;
+  onChange: (value: any | null) => void;
+  productDetail: any;
+  handleAddProduct: any;
 }
-const InforDetailProduct = ({ productDetail }: { productDetail: any }) => {
+const InforDetailProduct = ({
+  productDetail,
+  DecreaseInput,
+  IncreaseInput,
+  valueQuantityNumber,
+  form,
+  onChange,
+  handleAddProduct,
+}: PropInForProduct) => {
   const [rate, setRate] = useState<number | undefined>(undefined);
   const navigate = useNavigate();
-  const [valueQuantity, setValueQuantity] = useState(0);
-  const [form] = Form.useForm();
-  const onChange: InputNumberProps["onChange"] = (value: any) => {
-    setValueQuantity(value);
-  };
-  const onFinish: FormProps<FieldType>["onFinish"] = (values) => {
+  const onFinish: FormProps<PropInForProduct>["onFinish"] = (values) => {
     console.log("Success:", values);
   };
 
-  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
+  const onFinishFailed: FormProps<PropInForProduct>["onFinishFailed"] = (
     errorInfo
   ) => {
     console.log("Failed:", errorInfo);
   };
-  const IncreaseInput = () => {
-    if (valueQuantity < productDetail.stock) {
-      const newValue = valueQuantity + 1;
-      setValueQuantity(newValue);
-      form.setFieldsValue({ valueQuantity: newValue });
-    } else {
-      message.error("Sản phẩm đã hết hàng");
-    }
-  };
 
-  const DecreaseInput = () => {
-    if (valueQuantity > 0) {
-      const newValue = valueQuantity - 1;
-      setValueQuantity(newValue);
-      form.setFieldsValue({ valueQuantity: newValue });
-    } else {
-      message.error("Tối thiểu số sản phẩm là 0");
-    }
-  };
   useEffect(() => {
     if (productDetail && typeof productDetail.ratings === "number") {
       setRate(Math.round(productDetail.ratings));
     }
   }, [productDetail]);
-  console.log(valueQuantity);
   return (
     <div className="max-w-[700px]">
       <div className="product-name text-[30px] mb-[10px]">
@@ -81,12 +70,11 @@ const InforDetailProduct = ({ productDetail }: { productDetail: any }) => {
           >
             <MinusOutlined />
           </Button>
-          <Form.Item name={"valueQuantity"}>
+          <Form.Item name={"valueQuantity"} initialValue={0}>
             <InputNumber
               min={0}
               max={productDetail.stock}
-              value={valueQuantity}
-              defaultValue={0}
+              value={valueQuantityNumber}
               onChange={onChange}
             />
           </Form.Item>
@@ -101,6 +89,7 @@ const InforDetailProduct = ({ productDetail }: { productDetail: any }) => {
             type="primary"
             htmlType="submit"
             className="bg-[#167fff] px-7"
+            onClick={() => handleAddProduct(valueQuantityNumber, productDetail)}
           >
             Add to cart
           </Button>

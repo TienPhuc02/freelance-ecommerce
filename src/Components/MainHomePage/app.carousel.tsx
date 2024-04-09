@@ -91,10 +91,7 @@ const CarouselMain: React.FC = () => {
         {allProduct.length !== 0 &&
           allProduct.map((product: any) => {
             return (
-              <div
-                key={product?._id}
-                onClick={() => navigate(`/product/${product._id}`)}
-              >
+              <div key={product?._id}>
                 <div className="mx-[10px] h-[400px] cursor-pointer mt-[50px] border hover:shadow-xl rounded-lg">
                   <Image
                     height={200}
@@ -103,7 +100,10 @@ const CarouselMain: React.FC = () => {
                     src={product?.images[1]?.url}
                     alt="Image Product"
                   />
-                  <div className="info-product-item px-2">
+                  <div
+                    className="info-product-item px-2"
+                    onClick={() => navigate(`/product/${product._id}`)}
+                  >
                     <p className="text-center min-h-[50px] hover:text-[#167fff]">
                       {product.name}
                     </p>
