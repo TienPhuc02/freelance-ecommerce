@@ -60,13 +60,16 @@ const DetailProductPage = () => {
     if (listProductOrder.length !== 0) {
       const productCheckStock = findElementById(listProductOrder, product._id);
       console.log(productCheckStock);
-      if(productCheckStock.detail.stock===0){
-        message.error("Sản Phẩm đã hết hàng")
+      if (productCheckStock.detail.stock === 0) {
+        message.error("Sản Phẩm đã hết hàng");
       }
+    }else {
+      console.log("check quantity >>>", quantity);
+      console.log("check quantity >>>", product);
+      dispatch(
+        doProductAction({ quantity, detail: product, _id: product._id })
+      );
     }
-    console.log("check quantity >>>", quantity);
-    console.log("check quantity >>>", product);
-    dispatch(doProductAction({ quantity, detail: product, _id: product._id }));
   };
   useEffect(() => {
     getProductDetail();
