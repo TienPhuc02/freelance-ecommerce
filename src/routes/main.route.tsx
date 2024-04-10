@@ -5,6 +5,7 @@ import LoginPage from "../pages/Login/page.login";
 import SignUpPage from "../pages/SignUp/page.signup";
 import MainFilterProduct from "../pages/QueryParamsProducts/page.filter-product";
 import DetailProductPage from "../pages/DetailProduct/page.detail-product";
+import PageViewOrder from "../pages/ViewOrder/page.view-order";
 
 const router = createBrowserRouter([
   {
@@ -32,6 +33,14 @@ const router = createBrowserRouter([
         element: (
           <>
             <DetailProductPage />
+          </>
+        ),
+      },
+      {
+        path: "/view-order",
+        element: (
+          <>
+            <PageViewOrder />
           </>
         ),
       },

@@ -8,7 +8,7 @@ import { useSelector } from "react-redux";
 const HeaderComponent = () => {
   const navigate = useNavigate();
   const [valueInput, setValueInput] = useState<string>("");
-  const [arrowAtCenter, setArrowAtCenter] = useState(false);
+  const arrowAtCenter = false;
   const [form] = Form.useForm();
   const orderList = useSelector((state: any) => state?.order?.cart);
   const quantityCart = useSelector((state: any) => state?.order?.cart?.length);
@@ -34,6 +34,9 @@ const HeaderComponent = () => {
       navigate(`/keyword=${valueInput}`);
     }
   };
+  const handleViewOrder = () => {
+    navigate("/view-order");
+  };
   const text = <span className="text-center">Sản phẩm mới thêm</span>;
   const content = (
     <>
@@ -41,33 +44,29 @@ const HeaderComponent = () => {
         {orderList &&
           orderList.length > 0 &&
           orderList.map((item: any, index: any) => {
-            const imageUrl = item?.detail?.images[0]?.url;
+            const imageUrl = item?.detail?.images?.[0]?.url;
             return imageUrl ? (
               <div key={index} style={{ display: "flex", marginTop: "10px" }}>
                 <img
-                  style={{ display: "block", width: "50px", height: "50px" }}
+                  className="block w-[50px] h-[50px] mr-3"
                   src={imageUrl}
                   alt=""
                 />
                 <span>{item.detail.mainText}</span>
-                <span style={{ color: "#EE4C2D", marginLeft: "10px" }}>
-                  {item.detail.price} $
-                </span>
+                <div className="flex flex-col">
+                  <div style={{ marginLeft: "10px" }}>
+                    {item.detail.price} $
+                  </div>
+                  <div className="text-[15px]">{item.detail.name}</div>
+                </div>
               </div>
             ) : null;
           })}
       </div>
       <div className="text-center">
         <button
-          className="bg-[#4096ff] rounded-[10px] p-[5px] text-white text-[13px]"
-          // onClick={() => handleViewOrder()}
-          // style={{
-          //   margin: "10px 0px 0px 400px",
-          //   background: "#ee4d2d",
-          //   color: "white",
-          //   borderRadius: "5px",
-          //   padding: "10px",
-          // }}
+          className="bg-[#4096ff] rounded-[10px] py-[5px] px-[15px] text-white text-[13px]"
+          onClick={() => handleViewOrder()}
         >
           Xem giỏ hàng
         </button>
@@ -125,7 +124,10 @@ const HeaderComponent = () => {
           arrow={mergedArrow}
         >
           <Badge count={quantityCart}>
-            <ShoppingCartOutlined className="text-[32px] text-black opacity-50 font-extralight" />
+            <ShoppingCartOutlined
+              onClick={() => handleViewOrder()}
+              className="text-[32px] text-black opacity-50 font-extralight"
+            />
           </Badge>
         </Popover>
       </div>
