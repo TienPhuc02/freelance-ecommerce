@@ -20,7 +20,6 @@ export const orderSlice = createSlice({
       const item = action.payload;
       console.log(item);
       const isExistIndex = state.cart.findIndex((c) => {
-        console.log("ttt", c);
         return c.id === item.detail._id;
       });
       console.log("check>>", isExistIndex);
@@ -37,9 +36,35 @@ export const orderSlice = createSlice({
         });
       }
     },
+    doUpdateOrder: (state, action) => {
+      const item = action.payload;
+      console.log(item);
+      const isExistIndex = state.cart.findIndex((c) => {
+        return c.id === item.product.id;
+      });
+      console.log("check>>", isExistIndex);
+      if (isExistIndex > -1) {
+        const updateQuantity =
+          item.quantity - state.cart[isExistIndex].quantity;
+        state.cart[isExistIndex].quantity = item.quantity;
+        state.cart[isExistIndex].detail.stock -= updateQuantity;
+        if (state.cart[isExistIndex].quantity > item.quantity) {
+          state.cart[isExistIndex].quantity = item.quantity;
+        }
+      } else {
+        state.cart.push({
+          quantity: item.quantity,
+          id: item.detail._id,
+          detail: {
+            ...item.detail,
+            stock: item.product.detail.stock - item.quantity,
+          },
+        });
+      }
+    },
   },
 });
 
-export const { doProductAction } = orderSlice.actions;
+export const { doProductAction, doUpdateOrder } = orderSlice.actions;
 
 export default orderSlice.reducer;
