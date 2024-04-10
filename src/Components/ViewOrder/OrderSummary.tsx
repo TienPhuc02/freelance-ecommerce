@@ -19,8 +19,8 @@ const OrderSummary = () => {
       .toFixed(2)
   );
   return (
-    <div className="border border-green-400 w-[300px]">
-      <Card className="w-[300px] h-[250px]">
+    <div className="w-[300px] rounded-lg shadow-md h-[180px] mt-5">
+      <Card className="">
         <div>Order Summary : </div>
         <Divider />
         <div className="number-item flex justify-between mb-5">

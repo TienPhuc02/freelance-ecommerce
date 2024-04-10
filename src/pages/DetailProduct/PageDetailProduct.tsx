@@ -52,7 +52,7 @@ const DetailProductPage = () => {
       );
     }
   };
-  function findElementById(arr, id) {
+  function findElementById(arr: any, id: any) {
     return arr.find((item: any) => item.id === id);
   }
   const handleAddProduct = (quantity: any, product: any) => {
@@ -63,7 +63,7 @@ const DetailProductPage = () => {
       if (productCheckStock.detail.stock === 0) {
         message.error("Sản Phẩm đã hết hàng");
       }
-    }else {
+    } else {
       console.log("check quantity >>>", quantity);
       console.log("check quantity >>>", product);
       dispatch(
