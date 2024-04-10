@@ -1,4 +1,4 @@
-import { Button, Empty, InputNumber } from "antd";
+import { Button, Divider, Empty, InputNumber } from "antd";
 import React from "react";
 import { useDispatch } from "react-redux";
 import { useSelector } from "react-redux";
@@ -6,11 +6,15 @@ import {
   doDeleteItemCartAction,
   doUpdateOrder,
 } from "../../redux/features/order/orderSlice";
-import { DeleteOutlined, MinusOutlined, PlusOutlined } from "@ant-design/icons";
-
+import { MinusOutlined, PlusOutlined } from "@ant-design/icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 const OrderListView = () => {
   const dispatch = useDispatch();
   const listProductOrder = useSelector((state: any) => state.order.cart);
+  const TotalProductOrderLength = useSelector(
+    (state: any) => state.order.cart.length
+  );
   console.log(listProductOrder);
   const onChangeOrderProduct = (product: any, quantity: any) => {
     console.log("item>> check", product);
@@ -40,7 +44,11 @@ const OrderListView = () => {
     dispatch(doDeleteItemCartAction({ _id: product.id }));
   };
   return (
-    <div className="border border-red-400 w-[900px] mr-[10px]">
+    <div className="w-[900px] mr-[10px]">
+      <div className="number-order-product text-[20px] mb-4">
+        Giỏ hàng của bạn có {TotalProductOrderLength} sản phẩm
+      </div>
+      <Divider />
       {listProductOrder.length !== 0 ? (
         listProductOrder.map((product: any) => {
           return (
@@ -75,7 +83,7 @@ const OrderListView = () => {
                 className="delete-order-product text-[20px] cursor-pointer"
                 onClick={() => deleteProductOrder(product)}
               >
-                <DeleteOutlined />
+                <FontAwesomeIcon icon={faTrash} />
               </div>
             </div>
           );
@@ -85,6 +93,7 @@ const OrderListView = () => {
           <Empty />
         </>
       )}
+      <Divider />
     </div>
   );
 };

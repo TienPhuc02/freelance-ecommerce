@@ -6,6 +6,7 @@ import InforDetailProduct from "../../Components/DetailProduct/InforDetailProduc
 import { Form, InputNumberProps, message } from "antd";
 import { useDispatch } from "react-redux";
 import { doProductAction } from "../../redux/features/order/orderSlice";
+import { useSelector } from "react-redux";
 
 const DetailProductPage = () => {
   const [images, setImages] = useState<any[]>([]);
@@ -14,7 +15,8 @@ const DetailProductPage = () => {
   const dispatch = useDispatch();
   const [valueQuantityNumber, setValueQuantityNumber] = useState(0);
   const { slug } = useParams<string>();
-  console.log(slug);
+  const listProductOrder = useSelector((state: any) => state.order.cart);
+  console.log(listProductOrder);
   const IncreaseInput = () => {
     if (valueQuantityNumber < productDetail.stock) {
       const newValue = valueQuantityNumber + 1;
@@ -50,7 +52,18 @@ const DetailProductPage = () => {
       );
     }
   };
+  function findElementById(arr, id) {
+    return arr.find((item: any) => item.id === id);
+  }
   const handleAddProduct = (quantity: any, product: any) => {
+    console.log(product._id);
+    if (listProductOrder.length !== 0) {
+      const productCheckStock = findElementById(listProductOrder, product._id);
+      console.log(productCheckStock);
+      if(productCheckStock.detail.stock===0){
+        message.error("Sản Phẩm đã hết hàng")
+      }
+    }
     console.log("check quantity >>>", quantity);
     console.log("check quantity >>>", product);
     dispatch(doProductAction({ quantity, detail: product, _id: product._id }));
