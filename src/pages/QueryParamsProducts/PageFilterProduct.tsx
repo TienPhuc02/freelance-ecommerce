@@ -2,8 +2,9 @@ import { useParams } from "react-router-dom";
 import { APIGetAllProduct } from "../../services/api";
 import { useEffect, useState } from "react";
 import { Checkbox, Form, FormProps, GetProp, message } from "antd";
-import FilterComponent from "../../Components/MainQueryProducts/component.filter-product";
-import ProductFiltered from "../../Components/MainQueryProducts/component.product-filtered";
+import FilterComponent from "../../Components/MainQueryProducts/ComponentFilterProduct";
+import ProductFiltered from "../../Components/MainQueryProducts/ComponentProductFiltered";
+
 type FieldType = {
   pricegt?: string;
   pricelt?: string;

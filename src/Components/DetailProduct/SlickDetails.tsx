@@ -1,5 +1,5 @@
-import "./slick-detail.css";
-import ImageGallery from "react-image-gallery"; // Import React Image Gallery component
+import "./SlickDetail.css";
+import ImageGallery from "react-image-gallery";
 import ModalGallery from "./ModalProduct";
 import { useRef, useState } from "react";
 

@@ -1,7 +1,7 @@
 import { Col, Image, Modal, Row } from "antd";
 import { useEffect, useRef, useState } from "react";
 import ImageGallery from "react-image-gallery";
-import "./slick-detail.css";
+import "./SlickDetail.css";
 
 const ModalGallery = (props: any) => {
   const { isOpen, setIsOpen, currentIndex, items } = props;

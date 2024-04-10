@@ -1,4 +1,4 @@
-import CarouselMain from "../../Components/MainHomePage/app.carousel";
+import CarouselMain from "../../Components/MainHomePage/AppCarousel";
 
 const PageHome = () => {
   return (
