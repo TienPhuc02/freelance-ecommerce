@@ -1,8 +1,10 @@
-import { Card, Divider } from "antd";
+import { Button, Card, Divider } from "antd";
 import React from "react";
 import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 const OrderSummary = () => {
+  const navigate = useNavigate();
   const TotalProductOrderUnit = useSelector((state: any) =>
     state.order.cart.reduce(
       (total: any, product: any) => total + product.quantity,
@@ -18,6 +20,9 @@ const OrderSummary = () => {
       )
       .toFixed(2)
   );
+  const handleCheckOut = () => {
+    navigate("/login");
+  };
   return (
     <div className="w-[300px] rounded-lg shadow-md h-[180px] mt-5">
       <Card className="">
@@ -31,6 +36,14 @@ const OrderSummary = () => {
           <span>Total Price : </span>
           <span>${TotalPriceProductOrder}</span>
         </div>
+        <Divider className="my-2" />
+        <Button
+          onClick={handleCheckOut}
+          type="primary"
+          className="bg-[#167fff] w-full"
+        >
+          Check Out
+        </Button>
       </Card>
     </div>
   );

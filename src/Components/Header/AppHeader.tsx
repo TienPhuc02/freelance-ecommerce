@@ -44,7 +44,7 @@ const HeaderComponent = () => {
         {orderList &&
           orderList.length > 0 &&
           orderList.map((item: any, index: any) => {
-            const imageUrl = item?.detail?.images?.[0]?.url;
+            const imageUrl = item?.detail?.images[0]?.url;
             return imageUrl ? (
               <div key={index} style={{ display: "flex", marginTop: "10px" }}>
                 <img
