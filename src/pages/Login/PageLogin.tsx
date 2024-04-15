@@ -1,6 +1,7 @@
 import React from "react";
 import { Button, Form, type FormProps, Input, message } from "antd";
 import { APILoginUser } from "../../services/api";
+import { useNavigate } from "react-router-dom";
 
 type FieldType = {
   email?: string;
@@ -20,8 +21,11 @@ const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
 const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
   console.log("Failed:", errorInfo);
 };
-
 const LoginPage: React.FC = () => {
+  const navigate = useNavigate();
+  const handleRedirectSignUp = () => {
+    navigate("/signup");
+  };
   return (
     <div className="pt-28">
       <Form
@@ -49,7 +53,9 @@ const LoginPage: React.FC = () => {
         >
           <Input.Password />
         </Form.Item>
-        <p className="underline mb-4 flex justify-end">Forgot Password</p>
+        <p className="underline mb-4 flex justify-end cursor-pointer">
+          Forgot Password
+        </p>
         <Form.Item>
           <Button
             type="primary"
@@ -59,7 +65,12 @@ const LoginPage: React.FC = () => {
             Login User
           </Button>
         </Form.Item>
-        <p className="underline mb-4 flex justify-end">New User ?</p>
+        <p
+          className="underline mb-4 flex justify-end cursor-pointer"
+          onClick={handleRedirectSignUp}
+        >
+          New User ?
+        </p>
       </Form>
     </div>
   );

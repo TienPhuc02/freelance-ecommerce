@@ -131,6 +131,7 @@ const HeaderComponent = () => {
           </Badge>
         </Popover>
       </div>
+    
       <div className="auth-header flex gap-2">
         <Button
           onClick={handleRedirectLogin}
