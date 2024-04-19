@@ -8,23 +8,31 @@ type FieldType = {
   password?: string;
 };
 
-const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
-  console.log("Success:", values);
-  const res = await APILoginUser(values.email, values.password);
-  console.log(res);
-  if (res) {
-    message.success(res.data.message);
-    localStorage.setItem("access_token", res.data.token);
-  }
-};
-
-const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
-  console.log("Failed:", errorInfo);
-};
 const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const handleRedirectSignUp = () => {
     navigate("/signup");
+  };
+  const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
+    console.log("Success:", values);
+    try {
+      const res = await APILoginUser(values.email, values.password);
+      console.log(res);
+      if (res) {
+        message.success(res.data.message);
+        localStorage.setItem("access_token", res.data.token);
+        navigate("/");
+      }
+    } catch (error) {
+      message.error("Thông tin đăng nhập chưa đúng. Vui lòng kiểm tra lại");
+      console.log(error);
+    }
+  };
+
+  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
+    errorInfo
+  ) => {
+    console.log("Failed:", errorInfo);
   };
   return (
     <div className="pt-28">
@@ -41,7 +49,13 @@ const LoginPage: React.FC = () => {
         <Form.Item<FieldType>
           label="Email"
           name="email"
-          rules={[{ required: true, message: "Please input your email!" }]}
+          rules={[
+            { required: true, message: "Please input your email!" },
+            {
+              pattern: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/, // Chỉ chấp nhận chữ cái có dấu
+              message: "Wrong email format",
+            },
+          ]}
         >
           <Input />
         </Form.Item>

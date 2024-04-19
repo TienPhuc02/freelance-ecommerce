@@ -1,6 +1,6 @@
 import React from "react";
 import { Button, Form, type FormProps, Input, message } from "antd";
-import { APILoginUser } from "../../services/api";
+import { APIRegister } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 
 type FieldType = {
@@ -9,24 +9,30 @@ type FieldType = {
   name: string;
 };
 
-const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
-  console.log("Success:", values);
-  const res = await APILoginUser(values.email, values.password);
-  console.log(res);
-  if (res) {
-    message.success(res.data.message);
-    localStorage.setItem("access_token", res.data.token);
-  }
-};
-
-const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (errorInfo) => {
-  console.log("Failed:", errorInfo);
-};
-
 const SignUpPage: React.FC = () => {
   const navigate = useNavigate();
   const handleRedirectLogin = () => {
     navigate("/login");
+  };
+  const onFinish: FormProps<FieldType>["onFinish"] = async (values) => {
+    console.log("Success:", values);
+    try {
+      const res = await APIRegister(values.name, values.email, values.password);
+      console.log(res);
+      if (res) {
+        message.success(res.data.message);
+        navigate("/login");
+      }
+    } catch (error: any) {
+      message.error(error?.response?.data?.message);
+      console.log(error?.response?.data?.message);
+    }
+  };
+
+  const onFinishFailed: FormProps<FieldType>["onFinishFailed"] = (
+    errorInfo
+  ) => {
+    console.log("Failed:", errorInfo);
   };
   return (
     <div className="pt-28">
@@ -43,14 +49,26 @@ const SignUpPage: React.FC = () => {
         <Form.Item<FieldType>
           label="Name"
           name="name"
-          rules={[{ required: true, message: "Please input your name!" }]}
+          rules={[
+            { required: true, message: "Please input your name!" },
+            {
+              pattern: /^[a-zA-ZÀ-Ỹà-ỹ]+$/, // Chỉ chấp nhận chữ cái có dấu
+              message: "Only letters are allowed",
+            },
+          ]}
         >
           <Input />
         </Form.Item>
         <Form.Item<FieldType>
           label="Email"
           name="email"
-          rules={[{ required: true, message: "Please input your email!" }]}
+          rules={[
+            { required: true, message: "Please input your email!" },
+            {
+              pattern: /^\w+@[a-zA-Z_]+?\.[a-zA-Z]{2,3}$/, // Chỉ chấp nhận chữ cái có dấu
+              message: "Only letters are allowed",
+            },
+          ]}
         >
           <Input />
         </Form.Item>
