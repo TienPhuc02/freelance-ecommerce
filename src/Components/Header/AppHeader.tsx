@@ -1,10 +1,10 @@
 import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
-import { Badge, Button, Form, Input, Popover } from "antd";
+import { Badge, Button, Form, Input, Popover, Select } from "antd";
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useDebounce from "../../hooks/useDebounce";
 import { useSelector } from "react-redux";
-
+import "./CssAppHesader.css";
 const HeaderComponent = () => {
   const navigate = useNavigate();
   const [valueInput, setValueInput] = useState<string>("");
@@ -131,17 +131,27 @@ const HeaderComponent = () => {
           </Badge>
         </Popover>
       </div>
-    
-      <div className="auth-header flex gap-2">
-        <Button
-          onClick={handleRedirectLogin}
-          type="primary"
-          className="bg-[#167fff]"
-        >
-          Log In
-        </Button>
-        <Button onClick={handleRedirectSignUp}>Sign Up</Button>
-      </div>
+      {localStorage.getItem("access_token") !== "" ? (
+        <>
+          <Select
+            defaultValue="lucy"
+            style={{ width: 120 }}
+            allowClear
+            options={[{ value: "lucy", label: "Lucy" }]}
+          />
+        </>
+      ) : (
+        <div className="auth-header flex gap-2">
+          <Button
+            onClick={handleRedirectLogin}
+            type="primary"
+            className="bg-[#167fff]"
+          >
+            Log In
+          </Button>
+          <Button onClick={handleRedirectSignUp}>Sign Up</Button>
+        </div>
+      )}
     </div>
   );
 };

@@ -21,3 +21,6 @@ export const APIRegister = (name: string, email: string, password: string) => {
     password: password,
   });
 };
+export const APIAccount = () => {
+  return axios.get("me");
+};
