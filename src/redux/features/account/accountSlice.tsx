@@ -35,9 +35,13 @@ export const counterSlice = createSlice({
       state.email = action.payload.email;
       state.role = action.payload.role;
     },
+    updateProfileRedux: (state, action) => {
+      state.name = action.payload.name;
+      state.email = action.payload.email;
+    },
   },
 });
 
-export const { getAccountRedux } = counterSlice.actions;
+export const { getAccountRedux, updateProfileRedux } = counterSlice.actions;
 
 export default counterSlice.reducer;

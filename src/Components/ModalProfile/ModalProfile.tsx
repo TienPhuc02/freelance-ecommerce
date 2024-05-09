@@ -1,5 +1,6 @@
 import { Modal, Tabs, TabsProps } from "antd";
-import InfoProfile from "./InforProfile";
+import InfoProfile from "./TabInforProfile";
+import TabUpdateProfile from "./TabUpdateProfile";
 
 type PropsModalProfile = {
   isModalOpen: boolean;
@@ -24,7 +25,7 @@ const ModalProfile = ({
     {
       key: "2",
       label: "Update Profile",
-      children: "Content of Tab Pane 2",
+      children: <TabUpdateProfile handleCancel={handleCancel} />,
     },
     {
       key: "3",
