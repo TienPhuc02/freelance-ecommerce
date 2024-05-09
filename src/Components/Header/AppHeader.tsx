@@ -5,14 +5,16 @@ import { Link, useNavigate } from "react-router-dom";
 import useDebounce from "../../hooks/useDebounce";
 import { useSelector } from "react-redux";
 import "./CssAppHesader.css";
+import ModalProfile from "../ModalProfile/ModalProfile";
 const HeaderComponent = () => {
   const navigate = useNavigate();
   const [valueInput, setValueInput] = useState<string>("");
   const arrowAtCenter = false;
   const [form] = Form.useForm();
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const orderList = useSelector((state: any) => state?.order?.cart);
   const quantityCart = useSelector((state: any) => state?.order?.cart?.length);
-  console.log(quantityCart);
+  const nameUser = useSelector((state: any) => state?.account?.name);
   const handleRedirectLogin = () => {
     navigate("/login");
   };
@@ -34,8 +36,31 @@ const HeaderComponent = () => {
       navigate(`/keyword=${valueInput}`);
     }
   };
+  const showModalProfile = () => {
+    setIsModalOpen(true);
+  };
+
+  const handleOk = () => {
+    setIsModalOpen(false);
+  };
+
+  const handleCancel = () => {
+    setIsModalOpen(false);
+  };
   const handleViewOrder = () => {
     navigate("/view-order");
+  };
+  const handleChangeSelect = (value: string) => {
+    console.log(`selected ${value}`);
+    switch (value) {
+      case "Profile":
+        showModalProfile();
+        break;
+      case "Order":
+        navigate("/order");
+        break;
+      case "SignOut":
+    }
   };
   const text = <span className="text-center">Sản phẩm mới thêm</span>;
   const content = (
@@ -73,7 +98,6 @@ const HeaderComponent = () => {
       </div>
     </>
   );
-  console.log("check url", orderList[0]?.detail?.images[0]?.url);
   const mergedArrow = useMemo(() => {
     if (arrowAtCenter)
       return {
@@ -131,13 +155,19 @@ const HeaderComponent = () => {
           </Badge>
         </Popover>
       </div>
-      {localStorage.getItem("access_token") !== "" ? (
+      {nameUser ? (
         <>
           <Select
-            defaultValue="lucy"
+            onChange={handleChangeSelect}
+            defaultValue={`Hi ${nameUser}`}
             style={{ width: 120 }}
             allowClear
-            options={[{ value: "lucy", label: "Lucy" }]}
+            value={`Hi ${nameUser}`}
+            options={[
+              { value: "Profile", label: "Profile" },
+              { value: "Order", label: "Order" },
+              { value: "SignOut", label: "Sign Out" },
+            ]}
           />
         </>
       ) : (
@@ -152,6 +182,12 @@ const HeaderComponent = () => {
           <Button onClick={handleRedirectSignUp}>Sign Up</Button>
         </div>
       )}
+
+      <ModalProfile
+        handleCancel={handleCancel}
+        handleOk={handleOk}
+        isModalOpen={isModalOpen}
+      />
     </div>
   );
 };

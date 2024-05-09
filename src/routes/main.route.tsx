@@ -7,7 +7,6 @@ import PageViewOrder from "../pages/ViewOrder/PageViewOrder";
 import LoginPage from "../pages/Login/PageLogin";
 import SignUpPage from "../pages/SignUp/PageSignup";
 
-
 const router = createBrowserRouter([
   {
     path: "/",
@@ -55,5 +54,6 @@ const router = createBrowserRouter([
     path: "/signup",
     element: <SignUpPage />,
   },
+ 
 ]);
 export default router;

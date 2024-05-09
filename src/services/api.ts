@@ -24,3 +24,6 @@ export const APIRegister = (name: string, email: string, password: string) => {
 export const APIAccount = () => {
   return axios.get("me");
 };
+export const APIUpdateProfile = (name?: string, email?: string) => {
+  return axios.put("me/update", { name: name, email: email });
+};
