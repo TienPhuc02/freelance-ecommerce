@@ -9,6 +9,10 @@ import ModalProfile from "../ModalProfile/ModalProfile";
 import { APISignOut } from "../../services/api";
 import { useDispatch } from "react-redux";
 import { logOutUserRedux } from "../../redux/features/account/accountSlice";
+import {
+  SELECT_HEADER_ADMIN,
+  SELECT_HEADER_USER,
+} from "../../constant/main.constant";
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
@@ -169,22 +173,28 @@ const HeaderComponent = () => {
           </Badge>
         </Popover>
       </div>
-      <div></div>
       {nameUser ? (
         <>
           <Avatar size={32} icon={<img src={`${user.avatar.url}`} />} />
-          <Select
-            onChange={handleChangeSelect}
-            defaultValue={`Hi ${nameUser}`}
-            style={{ width: 120 }}
-            allowClear
-            value={`Hi ${nameUser}`}
-            options={[
-              { value: "Profile", label: "Profile" },
-              { value: "Order", label: "Order" },
-              { value: "SignOut", label: "Sign Out" },
-            ]}
-          />
+          {user.role == "admin" ? (
+            <Select
+              onChange={handleChangeSelect}
+              defaultValue={`Hi ${nameUser}`}
+              style={{ width: 120 }}
+              allowClear
+              value={`Hi ${nameUser}`}
+              options={SELECT_HEADER_ADMIN}
+            />
+          ) : (
+            <Select
+              onChange={handleChangeSelect}
+              defaultValue={`Hi ${nameUser}`}
+              style={{ width: 120 }}
+              allowClear
+              value={`Hi ${nameUser}`}
+              options={SELECT_HEADER_USER}
+            />
+          )}
         </>
       ) : (
         <div className="auth-header flex gap-2">

@@ -31,7 +31,7 @@ export const APIUpdatePassword = (
   oldPassword?: string,
   newPassword?: string
 ) => {
-  return axios.put("newPassword", {
+  return axios.put("password/update", {
     oldPassword: oldPassword,
     password: newPassword,
   });
