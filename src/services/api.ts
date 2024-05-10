@@ -22,8 +22,16 @@ export const APIRegister = (name: string, email: string, password: string) => {
   });
 };
 export const APIAccount = () => {
-  return axios.get("me");
+  return axios.get("refresh");
 };
 export const APIUpdateProfile = (name?: string, email?: string) => {
   return axios.put("me/update", { name: name, email: email });
+};
+export const APIUploadAvatar = (urlImage: string) => {
+  const formData = new FormData();
+  formData.append("avatar", urlImage);
+  const config = {
+    headers: { "content-type": "multipart/form-data" },
+  };
+  return axios.put("me/upload_avatar", formData, config);
 };

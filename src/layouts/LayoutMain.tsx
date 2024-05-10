@@ -8,13 +8,13 @@ import { message } from "antd";
 import { getAccountRedux } from "../redux/features/account/accountSlice";
 
 const LayoutMain = () => {
-  const dispath = useDispatch();
+  const dispatch = useDispatch();
   const getAccount = async () => {
     const res = await APIAccount();
     console.log("res account ", res);
     if (res && res.data) {
       message.success(res.data.message);
-      dispath(getAccountRedux(res.data.user));
+      dispatch(getAccountRedux(res.data.user));
     }
   };
   useEffect(() => {

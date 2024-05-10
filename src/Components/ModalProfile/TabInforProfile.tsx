@@ -1,4 +1,4 @@
-import { UserOutlined } from "@ant-design/icons";
+
 import { Avatar } from "antd";
 import { useSelector } from "react-redux";
 
@@ -7,7 +7,7 @@ const InfoProfile = () => {
   console.log("check modal user", user);
   return (
     <div className="flex info-profile container gap-3">
-      <Avatar size={200} icon={<UserOutlined />} />
+      <Avatar size={200} icon={<img src={`${user.avatar.url}`} />} />
       <div className="flex flex-col gap-4">
         <p className="font-semibold text-xl">Full Name: </p>
         <span>{user.name}</span>

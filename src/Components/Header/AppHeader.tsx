@@ -1,20 +1,31 @@
 import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
-import { Badge, Button, Form, Input, Popover, Select } from "antd";
+import {
+  Avatar,
+  Badge,
+  Button,
+  Form,
+  Input,
+  Popover,
+  Select,
+} from "antd";
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useDebounce from "../../hooks/useDebounce";
 import { useSelector } from "react-redux";
 import "./CssAppHesader.css";
 import ModalProfile from "../ModalProfile/ModalProfile";
+
 const HeaderComponent = () => {
   const navigate = useNavigate();
   const [valueInput, setValueInput] = useState<string>("");
   const arrowAtCenter = false;
   const [form] = Form.useForm();
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const orderList = useSelector((state: any) => state?.order?.cart);
   const quantityCart = useSelector((state: any) => state?.order?.cart?.length);
   const nameUser = useSelector((state: any) => state?.account?.name);
+  const user = useSelector((state: any) => state?.account);
   const handleRedirectLogin = () => {
     navigate("/login");
   };
@@ -44,8 +55,9 @@ const HeaderComponent = () => {
     setIsModalOpen(false);
   };
 
-  const handleCancel = () => {
+  const handleCancel =  () => {
     setIsModalOpen(false);
+    
   };
   const handleViewOrder = () => {
     navigate("/view-order");
@@ -154,6 +166,9 @@ const HeaderComponent = () => {
             />
           </Badge>
         </Popover>
+      </div>
+      <div>
+        <Avatar size={32} icon={<img src={`${user.avatar.url}`} />} />
       </div>
       {nameUser ? (
         <>
