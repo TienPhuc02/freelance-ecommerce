@@ -1,7 +1,8 @@
 import { Modal, Tabs, TabsProps } from "antd";
 import InfoProfile from "./TabInforProfile";
 import TabUpdateProfile from "./TabUpdateProfile";
-import TabUploadAvatar from "./TabUploadAvavtar";
+import TabUploadAvatar from "./TabUploadAvatar";
+import UpdatePassword from "./UpdatePassword";
 
 type PropsModalProfile = {
   isModalOpen: boolean;
@@ -31,12 +32,12 @@ const ModalProfile = ({
     {
       key: "3",
       label: "Upload Avatar",
-      children: <TabUploadAvatar handleCancel={handleCancel}/>,
+      children: <TabUploadAvatar handleCancel={handleCancel} />,
     },
     {
       key: "4",
-      label: "Tab 4",
-      children: "Content of Tab Pane 4",
+      label: "Update Password",
+      children: <UpdatePassword handleCancel={handleCancel} />,
     },
   ];
   return (

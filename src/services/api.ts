@@ -27,6 +27,9 @@ export const APIAccount = () => {
 export const APIUpdateProfile = (name?: string, email?: string) => {
   return axios.put("me/update", { name: name, email: email });
 };
+export const APIUpdatePassword = (oldPassword?: string, newPassword?: string) => {
+  return axios.put("newPassword", { oldPassword: oldPassword, password: newPassword });
+};
 export const APIUploadAvatar = (urlImage: string) => {
   const formData = new FormData();
   formData.append("avatar", urlImage);
