@@ -20,7 +20,6 @@ const LoginPage: React.FC = () => {
       console.log(res);
       if (res) {
         message.success(res.data.message);
-        localStorage.setItem("access_token", res.data.token);
         navigate("/");
       }
     } catch (error) {

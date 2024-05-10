@@ -39,9 +39,17 @@ export const counterSlice = createSlice({
       state.name = action.payload.name;
       state.email = action.payload.email;
     },
+    logOutUserRedux: (state) => {
+      state.avatar.public_id = "";
+      state.avatar.url = "";
+      state.name = "";
+      state.email = "";
+      state.role = "";
+    },
   },
 });
 
-export const { getAccountRedux, updateProfileRedux } = counterSlice.actions;
+export const { getAccountRedux, updateProfileRedux, logOutUserRedux } =
+  counterSlice.actions;
 
 export default counterSlice.reducer;

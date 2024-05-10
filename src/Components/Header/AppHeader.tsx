@@ -1,26 +1,21 @@
 import { SearchOutlined, ShoppingCartOutlined } from "@ant-design/icons";
-import {
-  Avatar,
-  Badge,
-  Button,
-  Form,
-  Input,
-  Popover,
-  Select,
-} from "antd";
+import { Avatar, Badge, Button, Form, Input, Popover, Select } from "antd";
 import { useMemo, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import useDebounce from "../../hooks/useDebounce";
 import { useSelector } from "react-redux";
 import "./CssAppHesader.css";
 import ModalProfile from "../ModalProfile/ModalProfile";
+import { APISignOut } from "../../services/api";
+import { useDispatch } from "react-redux";
+import { logOutUserRedux } from "../../redux/features/account/accountSlice";
 
 const HeaderComponent = () => {
   const navigate = useNavigate();
   const [valueInput, setValueInput] = useState<string>("");
   const arrowAtCenter = false;
   const [form] = Form.useForm();
-
+  const dispatch = useDispatch();
   const [isModalOpen, setIsModalOpen] = useState(false);
   const orderList = useSelector((state: any) => state?.order?.cart);
   const quantityCart = useSelector((state: any) => state?.order?.cart?.length);
@@ -55,23 +50,30 @@ const HeaderComponent = () => {
     setIsModalOpen(false);
   };
 
-  const handleCancel =  () => {
+  const handleCancel = () => {
     setIsModalOpen(false);
-    
   };
   const handleViewOrder = () => {
     navigate("/view-order");
   };
-  const handleChangeSelect = (value: string) => {
+  const handleLogout = async () => {
+    const res = await APISignOut();
+    if (res && res.data) {
+      dispatch(logOutUserRedux());
+    }
+  };
+  const handleChangeSelect = async (value: string) => {
     console.log(`selected ${value}`);
     switch (value) {
       case "Profile":
         showModalProfile();
         break;
       case "Order":
-        navigate("/order");
+        navigate("/view-order");
         break;
       case "SignOut":
+        handleLogout();
+        break;
     }
   };
   const text = <span className="text-center">Sản phẩm mới thêm</span>;
@@ -167,11 +169,10 @@ const HeaderComponent = () => {
           </Badge>
         </Popover>
       </div>
-      <div>
-        <Avatar size={32} icon={<img src={`${user.avatar.url}`} />} />
-      </div>
+      <div></div>
       {nameUser ? (
         <>
+          <Avatar size={32} icon={<img src={`${user.avatar.url}`} />} />
           <Select
             onChange={handleChangeSelect}
             defaultValue={`Hi ${nameUser}`}
