@@ -6,6 +6,6 @@ export const SELECT_HEADER_USER = [
 export const SELECT_HEADER_ADMIN=[
     { value: "Profile", label: "Profile" },
     { value: "Order", label: "Order" },
-    { value: "ManagerPage", label: "Manager" },
+    { value: "DashBoard", label: "DashBoard" },
     { value: "SignOut", label: "Sign Out" },
 ]

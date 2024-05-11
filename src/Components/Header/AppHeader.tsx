@@ -78,6 +78,9 @@ const HeaderComponent = () => {
       case "SignOut":
         handleLogout();
         break;
+      case "DashBoard":
+        navigate("/admin");
+        break;
     }
   };
   const text = <span className="text-center">Sản phẩm mới thêm</span>;

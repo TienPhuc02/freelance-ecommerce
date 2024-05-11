@@ -6,6 +6,8 @@ import DetailProductPage from "../pages/DetailProduct/PageDetailProduct";
 import PageViewOrder from "../pages/ViewOrder/PageViewOrder";
 import LoginPage from "../pages/Login/PageLogin";
 import SignUpPage from "../pages/SignUp/PageSignup";
+import { PrivateRoute } from "./Private.route";
+import LayoutAdmin from "../layouts/LayoutAdmin";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +49,14 @@ const router = createBrowserRouter([
     ],
   },
   {
+    path: "/admin",
+    element: (
+      <PrivateRoute>
+        <LayoutAdmin />
+      </PrivateRoute>
+    ),
+  },
+  {
     path: "/login",
     element: <LoginPage />,
   },
@@ -54,6 +64,5 @@ const router = createBrowserRouter([
     path: "/signup",
     element: <SignUpPage />,
   },
- 
 ]);
 export default router;
