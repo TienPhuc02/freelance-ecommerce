@@ -8,6 +8,10 @@ import LoginPage from "../pages/Login/PageLogin";
 import SignUpPage from "../pages/SignUp/PageSignup";
 import { PrivateRoute } from "./Private.route";
 import LayoutAdmin from "../layouts/LayoutAdmin";
+import AdminDashBoard from "../Components/Admin/DashBoard/admin.dashboard";
+import AdminOrder from "../Components/Admin/Order/admin.order";
+import AdminProduct from "../Components/Admin/Product/admin.product";
+import AdminUser from "../Components/Admin/User/admin.user";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +59,25 @@ const router = createBrowserRouter([
         <LayoutAdmin />
       </PrivateRoute>
     ),
+    children: [
+      {
+        path: "",
+        index: true,
+        element: <AdminDashBoard />,
+      },
+      {
+        path: "order",
+        element: <AdminOrder />,
+      },
+      {
+        path: "product",
+        element: <AdminProduct />,
+      },
+      {
+        path: "user",
+        element: <AdminUser />,
+      },
+    ],
   },
   {
     path: "/login",

@@ -4,7 +4,6 @@ import { Navigate } from "react-router-dom";
 import NotFound from "../Components/ResultAntDesign/NotFound";
 import { useDispatch } from "react-redux";
 import { getAccountRedux } from "../redux/features/account/accountSlice";
-import { message } from "antd";
 import { APIAccount } from "../services/api";
 
 interface ProtectedRouteProps {

@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import "./LayoutAdmin.css";
 import {
+  CopyOutlined,
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UploadOutlined,
@@ -9,6 +10,7 @@ import {
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 import { Footer } from "antd/es/layout/layout";
+import { Link, Outlet } from "react-router-dom";
 
 const { Header, Sider, Content } = Layout;
 
@@ -36,18 +38,39 @@ const LayoutAdmin: React.FC = () => {
           items={[
             {
               key: "1",
-              icon: <UserOutlined />,
-              label: "nav 1",
+              icon: (
+                <Link to={"/admin"}>
+                  <UserOutlined />
+                </Link>
+              ),
+              label: "DashBoard",
             },
             {
               key: "2",
-              icon: <VideoCameraOutlined />,
-              label: "nav 2",
+              icon: (
+                <Link to={"/admin/user"}>
+                  <VideoCameraOutlined />
+                </Link>
+              ),
+              label: "User",
             },
             {
               key: "3",
-              icon: <UploadOutlined />,
-              label: "nav 3",
+              icon: (
+                <Link to={"/admin/product"}>
+                  <UploadOutlined />
+                </Link>
+              ),
+              label: "Product",
+            },
+            {
+              key: "4",
+              icon: (
+                <Link to={"/admin/order"}>
+                  <CopyOutlined />
+                </Link>
+              ),
+              label: "Order",
             },
           ]}
         />
@@ -74,7 +97,7 @@ const LayoutAdmin: React.FC = () => {
             borderRadius: borderRadiusLG,
           }}
         >
-          Content
+          <Outlet />
         </Content>
         <Footer style={{ textAlign: "center" }}>
           Ant Design ©{new Date().getFullYear()} Created by Ant UED
