@@ -11,7 +11,7 @@ import LayoutAdmin from "../layouts/LayoutAdmin";
 import AdminDashBoard from "../Components/Admin/DashBoard/admin.dashboard";
 import AdminOrder from "../Components/Admin/Order/admin.order";
 import AdminProduct from "../Components/Admin/Product/admin.product";
-import AdminUser from "../Components/Admin/User/admin.user";
+import AdminUser from "../Components/Admin/User/AdminUser";
 
 const router = createBrowserRouter([
   {

@@ -34,7 +34,6 @@ const LayoutAdmin: React.FC = () => {
         <Menu
           theme="light"
           mode="inline"
-          defaultSelectedKeys={["1"]}
           items={[
             {
               key: "1",

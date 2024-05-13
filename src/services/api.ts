@@ -47,3 +47,7 @@ export const APIUploadAvatar = (urlImage: string) => {
 export const APISignOut = () => {
   return axios.get("/logout");
 };
+
+export const APIGetAllUsers = () => {
+  return axios.get("/admin/users");
+};
