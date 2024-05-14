@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./LayoutAdmin.css";
 import {
   CopyOutlined,
@@ -11,6 +11,9 @@ import {
 import { Button, Layout, Menu, theme } from "antd";
 import { Footer } from "antd/es/layout/layout";
 import { Link, Outlet } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { APIAccount } from "../services/api";
+import { getAccountRedux } from "../redux/features/account/accountSlice";
 
 const { Header, Sider, Content } = Layout;
 
@@ -19,7 +22,17 @@ const LayoutAdmin: React.FC = () => {
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
-
+  const dispatch = useDispatch();
+  const getAccount = async () => {
+    const res = await APIAccount();
+    console.log("res account ", res);
+    if (res && res.data) {
+      dispatch(getAccountRedux(res.data.user));
+    }
+  };
+  useEffect(() => {
+    getAccount();
+  }, []);
   return (
     <Layout>
       <Sider

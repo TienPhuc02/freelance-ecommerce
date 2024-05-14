@@ -1,8 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { Image, Table } from "antd";
+import { Button, Image, Popconfirm, Table } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
-import { APIGetAllUsers, APIGetUserById } from "../../../services/api";
+import {
+  APIDeleteUserById,
+  APIGetAllUsers,
+  APIGetUserById,
+} from "../../../services/api";
 import DrawerDetailUser from "./DrawerUser";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 
 interface DataTypeUser {
   _id: string;
@@ -13,7 +18,9 @@ interface DataTypeUser {
 }
 
 const AdminUser: React.FC = () => {
+  const [listUser, setListUser] = useState<DataTypeUser[]>([]);
   const [openDrawer, setOpenDrawer] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [dataUser, setDataUser] = useState({
     id: "",
     name: "",
@@ -31,6 +38,7 @@ const AdminUser: React.FC = () => {
     setOpenDrawer(false);
   };
   const getUserById = async (id: string) => {
+    setIsLoading(true);
     const res = await APIGetUserById(id);
     console.log(res);
     if (res && res.data) {
@@ -45,6 +53,7 @@ const AdminUser: React.FC = () => {
       });
       showDrawer();
     }
+    setIsLoading(false);
   };
   console.log(">> check data dataUser", dataUser);
   const convertDateCol = (dateInput: string) => {
@@ -100,7 +109,7 @@ const AdminUser: React.FC = () => {
       dataIndex: "avatar",
       render: (record: any) => {
         return (
-          <>
+          <div key={record}>
             {record.url !== "" ? (
               <Image
                 width={50}
@@ -111,7 +120,7 @@ const AdminUser: React.FC = () => {
             ) : (
               "avatar user"
             )}
-          </>
+          </div>
         );
       },
     },
@@ -126,20 +135,58 @@ const AdminUser: React.FC = () => {
     },
     {
       title: "Action",
+      dataIndex: "_id",
+      render: (record: any) => {
+        return (
+          <>
+            <Popconfirm
+              title="Delete This User"
+              description="Are you sure to delete this user?"
+              icon={<QuestionCircleOutlined style={{ color: "red" }} />}
+              okButtonProps={{ style: { backgroundColor: "#167fff" } }}
+              okText={
+                <div
+                  onClick={() => {
+                    console.log(record);
+                    handleDeleteUser(record);
+                  }}
+                >
+                  Delete
+                </div>
+              }
+            >
+              <Button type="primary" className="mr-3 bg-[#167fff]">
+                Delete
+              </Button>
+            </Popconfirm>
+            <Button>Update</Button>
+          </>
+        );
+      },
     },
   ];
 
-  const [listUser, setListUser] = useState<DataTypeUser[]>([]);
   const getAllUserTable = async () => {
+    setIsLoading(true);
     const res = await APIGetAllUsers();
     console.log(res);
     if (res && res.data) {
       setListUser(res.data.users);
     }
+    setIsLoading(false);
   };
   useEffect(() => {
     getAllUserTable();
   }, []);
+  const handleDeleteUser = async (id: string) => {
+    setIsLoading(true);
+    const res = await APIDeleteUserById(id);
+    console.log(res);
+    if (res && res.data) {
+      getAllUserTable();
+    }
+    setIsLoading(false);
+  };
   const onChange: TableProps<DataTypeUser>["onChange"] = (
     pagination,
     filters,
@@ -151,6 +198,7 @@ const AdminUser: React.FC = () => {
   return (
     <div>
       <Table
+        loading={isLoading}
         scroll={{ x: 1500 }}
         columns={columns}
         dataSource={listUser}
@@ -166,7 +214,6 @@ const AdminUser: React.FC = () => {
       />
       <DrawerDetailUser
         onCloseDrawer={onCloseDrawer}
-        showDrawer={showDrawer}
         openDrawer={openDrawer}
         dataUser={dataUser}
         convertDateCol={convertDateCol}

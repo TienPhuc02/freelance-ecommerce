@@ -1,7 +1,6 @@
-import { Button, Drawer, Image, Input } from "antd";
+import { Drawer, Image, Input } from "antd";
 type PropsDrawer = {
   onCloseDrawer: () => void;
-  showDrawer: () => void;
   openDrawer: boolean;
   dataUser: {
     id: string;
@@ -16,16 +15,12 @@ type PropsDrawer = {
 };
 const DrawerDetailUser = ({
   onCloseDrawer,
-  showDrawer,
   openDrawer,
   dataUser,
   convertDateCol,
 }: PropsDrawer) => {
   return (
     <>
-      <Button type="primary" onClick={showDrawer}>
-        Open
-      </Button>
       <Drawer
         title="Basic Drawer"
         width={600}
@@ -69,7 +64,16 @@ const DrawerDetailUser = ({
               />
             </div>
           </div>
-          <Image src={dataUser.url} alt="abs" width={150} height={150} />
+          {dataUser.url !== "" ? (
+            <Image
+              width={150}
+              height={150}
+              src={`${dataUser.url}`}
+              alt="avatar user"
+            />
+          ) : (
+            "avatar user"
+          )}
         </div>
       </Drawer>
     </>

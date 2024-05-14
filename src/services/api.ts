@@ -55,3 +55,6 @@ export const APIGetAllUsers = () => {
 export const APIGetUserById = (id: string) => {
   return axios.get(`/admin/users/${id}`);
 };
+export const APIDeleteUserById = (id: string) => {
+  return axios.delete(`/admin/users/${id}`);
+};
