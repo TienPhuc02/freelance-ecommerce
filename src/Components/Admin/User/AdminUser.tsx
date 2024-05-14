@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Image, Table } from "antd";
 import type { TableColumnsType, TableProps } from "antd";
-import { APIGetAllUsers } from "../../../services/api";
+import { APIGetAllUsers, APIGetUserById } from "../../../services/api";
 import DrawerDetailUser from "./DrawerUser";
 
 interface DataTypeUser {
@@ -14,7 +14,15 @@ interface DataTypeUser {
 
 const AdminUser: React.FC = () => {
   const [openDrawer, setOpenDrawer] = useState(false);
-
+  const [dataUser, setDataUser] = useState({
+    id: "",
+    name: "",
+    email: "",
+    role: "",
+    url: "",
+    createdAt: "",
+    resetPasswordExpire: "",
+  });
   const showDrawer = () => {
     setOpenDrawer(true);
   };
@@ -22,6 +30,23 @@ const AdminUser: React.FC = () => {
   const onCloseDrawer = () => {
     setOpenDrawer(false);
   };
+  const getUserById = async (id: string) => {
+    const res = await APIGetUserById(id);
+    console.log(res);
+    if (res && res.data) {
+      setDataUser({
+        id: res.data?.user?._id,
+        name: res.data?.user?.name,
+        role: res.data?.user?.role,
+        email: res.data?.user?.email,
+        url: res.data.user?.avatar?.url,
+        createdAt: res.data.user?.createdAt,
+        resetPasswordExpire: res.data.user?.resetPasswordExpire,
+      });
+      showDrawer();
+    }
+  };
+  console.log(">> check data dataUser", dataUser);
   const convertDateCol = (dateInput: string) => {
     // Create a new Date object from the given string
     const date = new Date(dateInput);
@@ -46,7 +71,7 @@ const AdminUser: React.FC = () => {
       render: (record: any) => {
         return (
           <div
-            onClick={showDrawer}
+            onClick={() => getUserById(record)}
             className="hover:text-[#167fff] cursor-pointer"
           >
             {record}
@@ -143,6 +168,8 @@ const AdminUser: React.FC = () => {
         onCloseDrawer={onCloseDrawer}
         showDrawer={showDrawer}
         openDrawer={openDrawer}
+        dataUser={dataUser}
+        convertDateCol={convertDateCol}
       />
     </div>
   );

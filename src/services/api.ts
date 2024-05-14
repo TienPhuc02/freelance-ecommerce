@@ -51,3 +51,7 @@ export const APISignOut = () => {
 export const APIGetAllUsers = () => {
   return axios.get("/admin/users");
 };
+
+export const APIGetUserById = (id: string) => {
+  return axios.get(`/admin/users/${id}`);
+};
