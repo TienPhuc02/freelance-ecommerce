@@ -2,7 +2,7 @@ import { Drawer, Image, Input } from "antd";
 type PropsDrawer = {
   onCloseDrawer: () => void;
   openDrawer: boolean;
-  dataUser: {
+  dataUserView: {
     id: string;
     name: string;
     email: string;
@@ -16,7 +16,7 @@ type PropsDrawer = {
 const DrawerDetailUser = ({
   onCloseDrawer,
   openDrawer,
-  dataUser,
+  dataUserView,
   convertDateCol,
 }: PropsDrawer) => {
   return (
@@ -31,44 +31,44 @@ const DrawerDetailUser = ({
           <div className="flex mb-10">
             <div className="flex flex-col mr-5">
               <span className="mb-2">Id</span>
-              <Input defaultValue={dataUser.id} className="w-[250px]" />
+              <Input defaultValue={dataUserView.id} className="w-[250px]" />
             </div>
             <div className="flex flex-col ">
               <span className="mb-2">Name</span>
-              <Input defaultValue={dataUser.name} className="w-[250px]" />
+              <Input defaultValue={dataUserView.name} className="w-[250px]" />
             </div>
           </div>
           <div className="flex mb-10">
             <div className="flex flex-col mr-5">
               <span className="mb-2">Email</span>
-              <Input defaultValue={dataUser.email} className="w-[250px]" />
+              <Input defaultValue={dataUserView.email} className="w-[250px]" />
             </div>
             <div className="flex flex-col ">
               <span className="mb-2">Role</span>
-              <Input defaultValue={dataUser.role} className="w-[250px]" />
+              <Input defaultValue={dataUserView.role} className="w-[250px]" />
             </div>
           </div>
           <div className="flex mb-10">
             <div className="flex flex-col mr-5">
               <span className="mb-2">Created At</span>
               <Input
-                defaultValue={convertDateCol(dataUser.createdAt)}
+                defaultValue={convertDateCol(dataUserView.createdAt)}
                 className="w-[250px]"
               />
             </div>
             <div className="flex flex-col ">
               <span className="mb-2">Reset Password Expire</span>
               <Input
-                defaultValue={convertDateCol(dataUser.resetPasswordExpire)}
+                defaultValue={convertDateCol(dataUserView.resetPasswordExpire)}
                 className="w-[250px]"
               />
             </div>
           </div>
-          {dataUser.url !== "" ? (
+          {dataUserView.url !== "" ? (
             <Image
               width={150}
               height={150}
-              src={`${dataUser.url}`}
+              src={`${dataUserView.url}`}
               alt="avatar user"
             />
           ) : (

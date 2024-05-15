@@ -8,6 +8,7 @@ import {
 } from "../../../services/api";
 import DrawerDetailUser from "./DrawerUser";
 import { QuestionCircleOutlined } from "@ant-design/icons";
+import ModalUpdateUser from "./ModalUpadteUser";
 
 interface DataTypeUser {
   _id: string;
@@ -21,7 +22,7 @@ const AdminUser: React.FC = () => {
   const [listUser, setListUser] = useState<DataTypeUser[]>([]);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [dataUser, setDataUser] = useState({
+  const [dataUserView, setDataUserView] = useState({
     id: "",
     name: "",
     email: "",
@@ -30,19 +31,49 @@ const AdminUser: React.FC = () => {
     createdAt: "",
     resetPasswordExpire: "",
   });
-  const showDrawer = () => {
+  const [dataUserUpdate, setDataUserUpdate] = useState({
+    id: "",
+    name: "",
+    email: "",
+    role: "",
+  });
+  const [isModalUpdateUserOpen, setIsModalUpdateUserOpen] = useState(false);
+
+  const handleShowModalUpdateUser = async (id: string) => {
+    const res = await APIGetUserById(id);
+    if (res && res?.data) {
+      setDataUserUpdate({
+        name: res.data?.user?.name,
+        id: res.data?.user?._id,
+        role: res.data?.user?.role,
+        email: res.data?.user?.email,
+      });
+
+      setIsModalUpdateUserOpen(true);
+    }
+  };
+
+  const handleOkModalUpdateUser = () => {
+    setIsModalUpdateUserOpen(false);
+  };
+
+  const handleCancelModalUpdateUser = () => {
+    setIsModalUpdateUserOpen(false);
+  };
+
+  const showDrawer = async () => {
     setOpenDrawer(true);
   };
 
   const onCloseDrawer = () => {
     setOpenDrawer(false);
   };
+
   const getUserById = async (id: string) => {
     setIsLoading(true);
     const res = await APIGetUserById(id);
-    console.log(res);
     if (res && res.data) {
-      setDataUser({
+      setDataUserView({
         id: res.data?.user?._id,
         name: res.data?.user?.name,
         role: res.data?.user?.role,
@@ -55,32 +86,30 @@ const AdminUser: React.FC = () => {
     }
     setIsLoading(false);
   };
-  console.log(">> check data dataUser", dataUser);
+
   const convertDateCol = (dateInput: string) => {
-    // Create a new Date object from the given string
     const date = new Date(dateInput);
-
-    // Extract day, month, and year components
     const day = date.getUTCDate();
-    const month = date.getUTCMonth() + 1; // Month is zero-indexed, so add 1
+    const month = date.getUTCMonth() + 1;
     const year = date.getUTCFullYear();
-
-    // Format day and month to have leading zeros if needed
     const formattedDay = day < 10 ? "0" + day : day;
     const formattedMonth = month < 10 ? "0" + month : month;
-
-    // Construct the date in dd/mm/yyyy format
     const formattedDate = `${formattedDay}/${formattedMonth}/${year}`;
     return formattedDate;
   };
+
   const columns: TableColumnsType<DataTypeUser> = [
     {
       title: "Id",
       dataIndex: "_id",
       render: (record: any) => {
+        console.log(record);
         return (
           <div
-            onClick={() => getUserById(record)}
+            onClick={() => {
+              console.log(record);
+              getUserById(record);
+            }}
             className="hover:text-[#167fff] cursor-pointer"
           >
             {record}
@@ -159,7 +188,9 @@ const AdminUser: React.FC = () => {
                 Delete
               </Button>
             </Popconfirm>
-            <Button>Update</Button>
+            <Button onClick={() => handleShowModalUpdateUser(record)}>
+              Update
+            </Button>
           </>
         );
       },
@@ -169,24 +200,25 @@ const AdminUser: React.FC = () => {
   const getAllUserTable = async () => {
     setIsLoading(true);
     const res = await APIGetAllUsers();
-    console.log(res);
     if (res && res.data) {
       setListUser(res.data.users);
     }
     setIsLoading(false);
   };
+
   useEffect(() => {
     getAllUserTable();
   }, []);
+
   const handleDeleteUser = async (id: string) => {
     setIsLoading(true);
     const res = await APIDeleteUserById(id);
-    console.log(res);
     if (res && res.data) {
       getAllUserTable();
     }
     setIsLoading(false);
   };
+
   const onChange: TableProps<DataTypeUser>["onChange"] = (
     pagination,
     filters,
@@ -195,6 +227,7 @@ const AdminUser: React.FC = () => {
   ) => {
     console.log("params", pagination, filters, sorter, extra);
   };
+
   return (
     <div>
       <Table
@@ -215,8 +248,16 @@ const AdminUser: React.FC = () => {
       <DrawerDetailUser
         onCloseDrawer={onCloseDrawer}
         openDrawer={openDrawer}
-        dataUser={dataUser}
+        dataUserView={dataUserView}
         convertDateCol={convertDateCol}
+      />
+      <ModalUpdateUser
+        isModalUpdateUserOpen={isModalUpdateUserOpen}
+        handleOkModalUpdateUser={handleOkModalUpdateUser}
+        handleCancelModalUpdateUser={handleCancelModalUpdateUser}
+        dataUserUpdate={dataUserUpdate}
+        setIsLoading={setIsLoading}
+        getAllUserTable={getAllUserTable}
       />
     </div>
   );
