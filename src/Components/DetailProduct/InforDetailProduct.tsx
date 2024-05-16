@@ -9,6 +9,7 @@ import {
   Rate,
 } from "antd";
 import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 interface PropInForProduct {
   DecreaseInput: () => void;
@@ -33,7 +34,8 @@ const InforDetailProduct = ({
   const onFinish: FormProps<PropInForProduct>["onFinish"] = (values) => {
     console.log("Success:", values);
   };
-
+  const user = useSelector((state: any) => state.account);
+  console.log(user);
   const onFinishFailed: FormProps<PropInForProduct>["onFinishFailed"] = (
     errorInfo
   ) => {
@@ -111,14 +113,16 @@ const InforDetailProduct = ({
       <p className="leading-6">{productDetail.description}</p>
       <Divider className="my-2" />
       <p className="mb-3">Sold by : {productDetail.seller}</p>
-      <Button
-        type="text"
-        danger
-        className="pl-0"
-        onClick={() => navigate("/login")}
-      >
-        Hãy đăng nhập để có thể gửi đánh giá của bạn
-      </Button>
+      {user.name !== "" ? null : (
+        <Button
+          type="text"
+          danger
+          className="pl-0"
+          onClick={() => navigate("/login")}
+        >
+          Hãy đăng nhập để có thể gửi đánh giá của bạn
+        </Button>
+      )}
     </div>
   );
 };

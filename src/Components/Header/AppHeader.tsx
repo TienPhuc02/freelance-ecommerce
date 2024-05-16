@@ -101,7 +101,7 @@ const HeaderComponent = () => {
                 <span>{item.detail.mainText}</span>
                 <div className="flex flex-col">
                   <div style={{ marginLeft: "10px" }}>
-                    {item.detail.price} $
+                    {item.detail.price * item.quantity} $
                   </div>
                   <div className="text-[15px]">{item.detail.name}</div>
                 </div>

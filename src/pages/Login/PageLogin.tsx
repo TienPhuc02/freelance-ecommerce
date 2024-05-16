@@ -1,7 +1,8 @@
 import React from "react";
 import { Button, Form, type FormProps, Input, message } from "antd";
 import { APILoginUser } from "../../services/api";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { ArrowLeftOutlined } from "@ant-design/icons";
 
 type FieldType = {
   email?: string;
@@ -44,6 +45,10 @@ const LoginPage: React.FC = () => {
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
+        <Link to="/" className="underline">
+          <ArrowLeftOutlined />
+          Back To Home
+        </Link>
         <p className="text-center text-[20px]">Create Account</p>
         <Form.Item<FieldType>
           label="Email"

@@ -21,7 +21,7 @@ const OrderSummary = () => {
       .toFixed(2)
   );
   const handleCheckOut = () => {
-    navigate("/login");
+    navigate("/check-out");
   };
   return (
     <div className="w-[300px] rounded-lg shadow-md h-[180px] mt-5">

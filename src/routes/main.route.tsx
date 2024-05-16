@@ -12,6 +12,7 @@ import AdminDashBoard from "../Components/Admin/DashBoard/admin.dashboard";
 import AdminOrder from "../Components/Admin/Order/admin.order";
 import AdminProduct from "../Components/Admin/Product/admin.product";
 import AdminUser from "../Components/Admin/User/AdminUser";
+import CheckOutPage from "../pages/CheckOut/CheckOut";
 
 const router = createBrowserRouter([
   {
@@ -47,6 +48,14 @@ const router = createBrowserRouter([
         element: (
           <>
             <PageViewOrder />
+          </>
+        ),
+      },
+      {
+        path: "check-out",
+        element: (
+          <>
+            <CheckOutPage />
           </>
         ),
       },
