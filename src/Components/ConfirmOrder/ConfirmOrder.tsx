@@ -1,4 +1,7 @@
+import { Button } from "antd";
+
 const ConfirmOrder = () => {
-  return <>ConfirmOrder</>;
+  
+  return <Button type="text">ConfirmOrder</Button>;
 };
 export default ConfirmOrder;

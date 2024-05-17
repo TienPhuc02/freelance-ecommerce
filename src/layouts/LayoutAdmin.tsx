@@ -10,15 +10,19 @@ import {
 } from "@ant-design/icons";
 import { Button, Layout, Menu, theme } from "antd";
 import { Footer } from "antd/es/layout/layout";
-import { Link, Outlet } from "react-router-dom";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { APIAccount } from "../services/api";
-import { getAccountRedux } from "../redux/features/account/accountSlice";
+import { APIAccount, APISignOut } from "../services/api";
+import {
+  getAccountRedux,
+  logOutUserRedux,
+} from "../redux/features/account/accountSlice";
 
 const { Header, Sider, Content } = Layout;
 
 const LayoutAdmin: React.FC = () => {
   const [collapsed, setCollapsed] = useState(false);
+  const navigate = useNavigate();
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -28,6 +32,13 @@ const LayoutAdmin: React.FC = () => {
     console.log("res account ", res);
     if (res && res.data) {
       dispatch(getAccountRedux(res.data.user));
+    }
+  };
+  const handleLogout = async () => {
+    const res = await APISignOut();
+    if (res && res.data) {
+      navigate("/");
+      dispatch(logOutUserRedux());
     }
   };
   useEffect(() => {
@@ -89,16 +100,27 @@ const LayoutAdmin: React.FC = () => {
       </Sider>
       <Layout>
         <Header style={{ padding: 0, background: colorBgContainer }}>
-          <Button
-            type="text"
-            icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
-            onClick={() => setCollapsed(!collapsed)}
-            style={{
-              fontSize: "16px",
-              width: 64,
-              height: 64,
-            }}
-          />
+          <div className="flex justify-between">
+            <Button
+              type="text"
+              icon={collapsed ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+              onClick={() => setCollapsed(!collapsed)}
+              style={{
+                fontSize: "16px",
+                width: 64,
+                height: 64,
+              }}
+            />
+
+            <div className="pr-6 flex gap-4 items-center">
+              <Button onClick={() => navigate("/")} type="text">
+                Home
+              </Button>
+              <Button onClick={handleLogout} type="text">
+                Logout
+              </Button>
+            </div>
+          </div>
         </Header>
         <Content
           style={{
