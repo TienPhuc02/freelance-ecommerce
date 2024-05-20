@@ -4,7 +4,6 @@ import FooterComponent from "../Components/Footer/AppFooter";
 import { useEffect } from "react";
 import { APIAccount } from "../services/api";
 import { useDispatch } from "react-redux";
-import { message } from "antd";
 import { getAccountRedux } from "../redux/features/account/accountSlice";
 
 const LayoutMain = () => {
@@ -13,7 +12,6 @@ const LayoutMain = () => {
     const res = await APIAccount();
     console.log("res account ", res);
     if (res && res.data) {
-      message.success(res.data.message);
       dispatch(getAccountRedux(res.data.user));
     }
   };

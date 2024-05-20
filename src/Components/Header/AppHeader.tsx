@@ -139,8 +139,8 @@ const HeaderComponent = () => {
           </span>
         </Link>
       </div>
-      <div className="input-search-header min-w-[300px]">
-        <Form form={form} className="flex items-center">
+      <div className="input-search-header min-w-[300px] pt-5">
+        <Form form={form} className="flex items-center justify-center">
           <Form.Item>
             <SearchOutlined
               type="submit"

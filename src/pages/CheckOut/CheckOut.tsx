@@ -22,7 +22,7 @@ export interface IDataCreateOrder {
     }
   ];
   paymentMethod: string;
-  paymentInfo: {
+  paymentInfo?: {
     id: string;
     status: string;
   };
@@ -87,7 +87,11 @@ const CheckOutPage = () => {
         </>
       ) : currentStep === 1 ? (
         <>
-          <ConfirmOrder setCurrentStep={setCurrentStep} />
+          <ConfirmOrder
+            setCurrentStep={setCurrentStep}
+            dataOrder={dataOrder}
+            setDataOrder={setDataOrder}
+          />
         </>
       ) : currentStep === 2 ? (
         <>

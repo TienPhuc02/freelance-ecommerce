@@ -43,7 +43,7 @@ const ShippingInfo = ({ setDataOrder, dataOrder, setCurrentStep }: IProps) => {
   }, [dataOrder, form]);
   return (
     <div className="max-w-[500px] mx-auto mt-2">
-      <Card style={{ width: 500, height: 510 }}>
+      <Card style={{ width: 500, height: 500 }}>
         <Form
           form={form}
           name="basic"
@@ -109,11 +109,14 @@ const ShippingInfo = ({ setDataOrder, dataOrder, setCurrentStep }: IProps) => {
               className="border rounded-lg"
             />
           </Form.Item>
-          <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
+          <Form.Item
+            wrapperCol={{ offset: 8, span: 16 }}
+            labelCol={{ span: 24 }}
+          >
             <Button
               type="primary"
               htmlType="submit"
-              className="bg-[#167fff] mt-3"
+              className="bg-[#167fff] mt-3 px-[40px]"
             >
               Continue
             </Button>
