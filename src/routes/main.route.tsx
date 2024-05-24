@@ -53,6 +53,10 @@ const router = createBrowserRouter([
         ),
       },
       {
+        path: "/me/orders",
+        element: <MeOrder />,
+      },
+      {
         path: "check-out",
         element: (
           <>
@@ -86,10 +90,6 @@ const router = createBrowserRouter([
       {
         path: "user",
         element: <AdminUser />,
-      },
-      {
-        path: "/me/orders",
-        element: <MeOrder />,
       },
     ],
   },
