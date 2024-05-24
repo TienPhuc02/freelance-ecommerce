@@ -13,6 +13,7 @@ import AdminOrder from "../Components/Admin/Order/admin.order";
 import AdminProduct from "../Components/Admin/Product/admin.product";
 import AdminUser from "../Components/Admin/User/AdminUser";
 import CheckOutPage from "../pages/CheckOut/CheckOut";
+import MeOrder from "../pages/MeOrder/MeOrder";
 
 const router = createBrowserRouter([
   {
@@ -91,6 +92,10 @@ const router = createBrowserRouter([
   {
     path: "/login",
     element: <LoginPage />,
+  },
+  {
+    path: "/me/orders",
+    element: <MeOrder />,
   },
   {
     path: "/signup",

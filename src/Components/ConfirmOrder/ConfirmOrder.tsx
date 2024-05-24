@@ -35,14 +35,14 @@ const ConfirmOrder = ({
       itemsPrice: subtotal,
       shippingAmount: priceShipping,
       taxAmount: priceTax,
-      totalAmount: subtotal + priceShipping + priceTax,
+      totalAmount: parseFloat((subtotal + priceShipping + priceTax).toFixed(2)),
     }));
   }, [cart, priceShipping, priceTax, setDataOrder]);
   console.log(dataOrder);
   return (
     <>
       <div className="confirm-order-container flex gap-3">
-        <div className="shipping-info flex flex-col mt-3 gap-3 min-w-[700px] border border-red-500">
+        <div className="shipping-info flex flex-col mt-3 gap-3 min-w-[700px]">
           <p className="text-2xl">Shipping info</p>
           <p>Name : {user.name}</p>
           <p>Phone : {dataOrder.shippingInfo.phoneNumber}</p>
@@ -89,10 +89,14 @@ const ConfirmOrder = ({
             <Divider />
             <div className="total-price flex justify-between mb-4">
               <span>Total :</span>
-              <span>${dataOrder.totalAmount}</span>
+              <span>${dataOrder.totalAmount.toFixed(2)}</span>
             </div>
 
-            <Button type="primary" className="bg-[#167fff] w-full">
+            <Button
+              onClick={() => setCurrentStep(2)}
+              type="primary"
+              className="bg-[#167fff] w-full"
+            >
               Continue
             </Button>
           </Card>

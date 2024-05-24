@@ -23,7 +23,6 @@ export interface IDataCreateOrder {
   ];
   paymentMethod: string;
   paymentInfo?: {
-    id: string;
     status: string;
   };
   itemsPrice: number;
@@ -52,7 +51,6 @@ const CheckOutPage = () => {
     ],
     paymentMethod: "",
     paymentInfo: {
-      id: "",
       status: "",
     },
     itemsPrice: 0,
@@ -95,7 +93,11 @@ const CheckOutPage = () => {
         </>
       ) : currentStep === 2 ? (
         <>
-          <Payment />
+          <Payment
+            setDataOrder={setDataOrder}
+            dataOrder={dataOrder}
+            setCurrentStep={setCurrentStep}
+          />
         </>
       ) : null}
     </div>
