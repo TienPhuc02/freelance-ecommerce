@@ -27,7 +27,16 @@ const ConfirmOrder = ({
         0
       );
     };
-
+    const mapCartToOrderItems = () => {
+      return cart.map((item: any) => ({
+        name: item.detail.name,
+        quantity: item.quantity,
+        image: item.detail.images[0].url,
+        price: item.detail.price,
+        product: item.id,
+      }));
+    };
+    const orderItems = mapCartToOrderItems();
     const subtotal = calculateSubtotal();
 
     setDataOrder((prevDataOrder) => ({
@@ -36,6 +45,7 @@ const ConfirmOrder = ({
       shippingAmount: priceShipping,
       taxAmount: priceTax,
       totalAmount: parseFloat((subtotal + priceShipping + priceTax).toFixed(2)),
+      orderItems: orderItems,
     }));
   }, [cart, priceShipping, priceTax, setDataOrder]);
   console.log(dataOrder);

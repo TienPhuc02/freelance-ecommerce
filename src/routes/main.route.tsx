@@ -87,15 +87,15 @@ const router = createBrowserRouter([
         path: "user",
         element: <AdminUser />,
       },
+      {
+        path: "/me/orders",
+        element: <MeOrder />,
+      },
     ],
   },
   {
     path: "/login",
     element: <LoginPage />,
-  },
-  {
-    path: "/me/orders",
-    element: <MeOrder />,
   },
   {
     path: "/signup",

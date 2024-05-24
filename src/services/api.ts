@@ -1,4 +1,5 @@
 import axios from "../configs/customize.api";
+import { IDataCreateOrder } from "../pages/CheckOut/CheckOut";
 export const APIGetAllProduct = (queryParam: string = "") => {
   return axios.get(`products?${queryParam}`);
 };
@@ -69,4 +70,7 @@ export const APIUpdateUserById = (
     email: email,
     role: role,
   });
+};
+export const APICreateOrderCOD = (dataOrder: IDataCreateOrder) => {
+  return axios.post("/orders/new", dataOrder);
 };
