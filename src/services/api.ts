@@ -74,3 +74,12 @@ export const APIUpdateUserById = (
 export const APICreateOrderCOD = (dataOrder: IDataCreateOrder) => {
   return axios.post("/orders/new", dataOrder);
 };
+export const APIPaymentStripeSession = async (dataOrder: IDataCreateOrder) => {
+  try {
+    const response = await axios.post("/payment/checkout_session", dataOrder);
+    return response.data; // Return the data directly
+  } catch (error) {
+    console.error("Error creating Stripe session:", error);
+    return null;
+  }
+};

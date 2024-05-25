@@ -1,18 +1,25 @@
-import { Button, Card, Checkbox } from "antd";
+import { Button, Card, Checkbox, notification } from "antd";
 import { useState } from "react";
 import { IDataCreateOrder } from "../../pages/CheckOut/CheckOut";
-import { APICreateOrderCOD } from "../../services/api";
+import { APICreateOrderCOD, APIPaymentStripeSession } from "../../services/api";
 import { useNavigate } from "react-router-dom";
+import { loadStripe } from "@stripe/stripe-js";
+
 interface IPropsPayment {
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
   dataOrder: IDataCreateOrder;
   setDataOrder: React.Dispatch<React.SetStateAction<IDataCreateOrder>>;
 }
+
+const stripePromise = loadStripe(
+  "pk_test_51P4kkwGAY3OnCt5BaYSnIbfjeUeehkQVcN5lXhrV9EKtbEy4nsnNWSv3Shhz2EKqzj9QDR9cLJymmIqhMroImhBZ00LdCMYzOW"
+);
+
 const Payment = ({ dataOrder, setDataOrder }: IPropsPayment) => {
   const [selectedValue, setSelectedValue] = useState<string>("");
   const navigate = useNavigate();
-  console.log(selectedValue);
-  const onChange = (value: any) => {
+
+  const onChange = (value: string) => {
     setSelectedValue(value);
     setDataOrder((prevDataOrder) => ({
       ...prevDataOrder,
@@ -22,11 +29,43 @@ const Payment = ({ dataOrder, setDataOrder }: IPropsPayment) => {
       },
     }));
   };
+
   const handleSubmitCreateOrder = async () => {
-    console.log("check data order ", dataOrder);
-    const res = await APICreateOrderCOD(dataOrder);
-    console.log(res);
-    navigate("/me/orders");
+    if (selectedValue === "COD") {
+      // Xử lý Thanh toán khi giao hàng
+      const res = await APICreateOrderCOD(dataOrder);
+      console.log(res);
+      navigate("/me/orders");
+    } else if (selectedValue === "Card") {
+      // Xử lý thanh toán Stripe
+      const response = await APIPaymentStripeSession(dataOrder);
+
+      if (!response) {
+        notification.error({
+          message: "Lỗi",
+          description: "Không thể tạo phiên thanh toán của Stripe.",
+        });
+        return;
+      }
+
+      const { sessionId } = response; // sessionId trả về từ APIPaymentStripeSession
+
+      const stripe = await stripePromise;
+
+      if (stripe) {
+        const { error } = await stripe.redirectToCheckout({
+          sessionId: sessionId,
+        });
+        //https://docs.stripe.com/testing#cards
+        //4242424242424242
+        if (error) {
+          console.error(
+            "Lỗi khi chuyển hướng đến trang thanh toán của Stripe:",
+            error
+          );
+        }
+      }
+    }
   };
 
   return (
@@ -44,11 +83,11 @@ const Payment = ({ dataOrder, setDataOrder }: IPropsPayment) => {
             checked={selectedValue === "Card"}
             onChange={() => onChange("Card")}
           >
-            Card-VISA,MasterCard
+            Card - VISA, MasterCard
           </Checkbox>
           <div className="button submit" onClick={handleSubmitCreateOrder}>
             <Button type="primary" className="bg-[#167fff] w-full">
-              Continue
+              Payment
             </Button>
           </div>
         </div>
@@ -56,4 +95,5 @@ const Payment = ({ dataOrder, setDataOrder }: IPropsPayment) => {
     </div>
   );
 };
+
 export default Payment;

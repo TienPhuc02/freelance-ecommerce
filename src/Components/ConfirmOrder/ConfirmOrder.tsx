@@ -15,7 +15,7 @@ const ConfirmOrder = ({
   setDataOrder,
 }: IPropsConfirmOrder) => {
   const priceShipping = 0;
-  const priceTax = 100;
+  const priceTax = 0;
 
   const user = useSelector((state: any) => state.account);
   const cart = useSelector((state: any) => state.order.cart);

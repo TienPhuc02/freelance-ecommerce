@@ -3,7 +3,8 @@ import { useState } from "react";
 import ShippingInfo from "../../Components/ShippingInfo/ShippingInfo";
 import ConfirmOrder from "../../Components/ConfirmOrder/ConfirmOrder";
 import Payment from "../../Components/Payment/Payment";
-
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
 export interface IDataCreateOrder {
   shippingInfo: {
     address: string;
@@ -30,6 +31,9 @@ export interface IDataCreateOrder {
   shippingAmount: number;
   totalAmount: number;
 }
+const stripePromise = loadStripe(
+  "pk_test_51P4kkwGAY3OnCt5BaYSnIbfjeUeehkQVcN5lXhrV9EKtbEy4nsnNWSv3Shhz2EKqzj9QDR9cLJymmIqhMroImhBZ00LdCMYzOW"
+);
 const CheckOutPage = () => {
   const [currentStep, setCurrentStep] = useState(0);
   const [dataOrder, setDataOrder] = useState<IDataCreateOrder>({
@@ -93,11 +97,13 @@ const CheckOutPage = () => {
         </>
       ) : currentStep === 2 ? (
         <>
-          <Payment
-            setDataOrder={setDataOrder}
-            dataOrder={dataOrder}
-            setCurrentStep={setCurrentStep}
-          />
+          <Elements stripe={stripePromise}>
+            <Payment
+              setDataOrder={setDataOrder}
+              dataOrder={dataOrder}
+              setCurrentStep={setCurrentStep}
+            />
+          </Elements>
         </>
       ) : null}
     </div>
