@@ -1,5 +1,4 @@
 import { Button, Card, Divider } from "antd";
-import React from "react";
 import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 

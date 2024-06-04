@@ -4,6 +4,8 @@ import { IDataCreateOrder } from "../../pages/CheckOut/CheckOut";
 import { APICreateOrderCOD, APIPaymentStripeSession } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
+import { useDispatch } from "react-redux";
+import { doClearCart } from "../../redux/features/order/orderSlice";
 
 interface IPropsPayment {
   setCurrentStep: React.Dispatch<React.SetStateAction<number>>;
@@ -18,7 +20,7 @@ const stripePromise = loadStripe(
 const Payment = ({ dataOrder, setDataOrder }: IPropsPayment) => {
   const [selectedValue, setSelectedValue] = useState<string>("");
   const navigate = useNavigate();
-
+  const dispatch = useDispatch();
   const onChange = (value: string) => {
     setSelectedValue(value);
     setDataOrder((prevDataOrder) => ({
@@ -35,6 +37,7 @@ const Payment = ({ dataOrder, setDataOrder }: IPropsPayment) => {
       // Xử lý Thanh toán khi giao hàng
       const res = await APICreateOrderCOD(dataOrder);
       console.log(res);
+      dispatch(doClearCart());
       navigate("/me/orders");
     } else if (selectedValue === "Card") {
       // Xử lý thanh toán Stripe

@@ -63,7 +63,7 @@ export const orderSlice = createSlice({
       }
     },
     doClearCart: (state) => {
-      state.cart = []; // Clear the cart upon logout
+      state.cart = [];
     },
     doDeleteItemCartAction: (state, action) => {
       state.cart = state.cart.filter((c) => c.id !== action.payload._id);
@@ -71,7 +71,11 @@ export const orderSlice = createSlice({
   },
 });
 
-export const { doProductAction, doUpdateOrder, doDeleteItemCartAction } =
-  orderSlice.actions;
+export const {
+  doProductAction,
+  doUpdateOrder,
+  doDeleteItemCartAction,
+  doClearCart,
+} = orderSlice.actions;
 
 export default orderSlice.reducer;
