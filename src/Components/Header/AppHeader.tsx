@@ -44,6 +44,7 @@ const HeaderComponent = () => {
     if (e.key === "Enter") {
       handleSearch();
       navigate(`/keyword=${valueInput}`);
+      form.resetFields();
     }
   };
   const showModalProfile = () => {
@@ -73,7 +74,7 @@ const HeaderComponent = () => {
         showModalProfile();
         break;
       case "Order":
-        navigate("/view-order");
+        navigate("/me/orders");
         break;
       case "SignOut":
         handleLogout();

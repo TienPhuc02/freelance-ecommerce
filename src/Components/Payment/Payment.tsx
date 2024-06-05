@@ -66,6 +66,8 @@ const Payment = ({ dataOrder, setDataOrder }: IPropsPayment) => {
             "Lỗi khi chuyển hướng đến trang thanh toán của Stripe:",
             error
           );
+        } else {
+          dispatch(doClearCart());
         }
       }
     }

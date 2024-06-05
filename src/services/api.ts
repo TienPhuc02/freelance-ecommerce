@@ -83,3 +83,4 @@ export const APIPaymentStripeSession = async (dataOrder: IDataCreateOrder) => {
     return null;
   }
 };
+export const APIMeOrder=()=>{}

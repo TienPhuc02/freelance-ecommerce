@@ -1,9 +1,11 @@
 import { Button, Image, Rate } from "antd";
+import { useNavigate } from "react-router-dom";
 
 type PropsType = {
   allProductFilter: any[];
 };
 const ProductFiltered = ({ allProductFilter }: PropsType) => {
+  const navigate = useNavigate();
   console.log(allProductFilter);
   return (
     <div className="product-filtered w-[800px] grid grid-cols-2 mb-2">
@@ -11,7 +13,10 @@ const ProductFiltered = ({ allProductFilter }: PropsType) => {
         allProductFilter.map((product: any) => {
           return (
             <div key={product?._id}>
-              <div className="mx-[10px] max-w-[315px] h-[400px] cursor-pointer mt-[50px] border hover:shadow-xl rounded-lg">
+              <div
+                className="mx-[10px] max-w-[315px] h-[400px] cursor-pointer mt-[50px] border hover:shadow-xl rounded-lg"
+                onClick={() => navigate(`/product/${product._id}`)}
+              >
                 <Image
                   height={200}
                   className="object-cover"
