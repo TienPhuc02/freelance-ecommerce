@@ -83,4 +83,9 @@ export const APIPaymentStripeSession = async (dataOrder: IDataCreateOrder) => {
     return null;
   }
 };
-export const APIMeOrder=()=>{}
+export const APIMeOrder = () => {
+  return axios.get(`/me/orders`);
+};
+export const APIMeOrderItemsDetail = (id: string) => {
+  return axios.get(`/orders/${id}`);
+};

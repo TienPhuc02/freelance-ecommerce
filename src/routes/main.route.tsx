@@ -8,12 +8,14 @@ import LoginPage from "../pages/Login/PageLogin";
 import SignUpPage from "../pages/SignUp/PageSignup";
 import { PrivateRoute } from "./Private.route";
 import LayoutAdmin from "../layouts/LayoutAdmin";
-import AdminDashBoard from "../Components/Admin/DashBoard/admin.dashboard";
-import AdminOrder from "../Components/Admin/Order/admin.order";
-import AdminProduct from "../Components/Admin/Product/admin.product";
-import AdminUser from "../Components/Admin/User/AdminUser";
+
 import CheckOutPage from "../pages/CheckOut/CheckOut";
 import MeOrder from "../pages/MeOrder/MeOrder";
+import MeOrderDetail from "../pages/MeOrder/MeOrderDetail";
+import AdminDashBoard from "../pages/Admin/DashBoard/admin.dashboard";
+import AdminOrder from "../pages/Admin/Order/admin.order";
+import AdminProduct from "../pages/Admin/Product/admin.product";
+import AdminUser from "../pages/Admin/User/AdminUser";
 
 const router = createBrowserRouter([
   {
@@ -55,6 +57,10 @@ const router = createBrowserRouter([
       {
         path: "/me/orders",
         element: <MeOrder />,
+      },
+      {
+        path: "/me/orders/:id",
+        element: <MeOrderDetail />,
       },
       {
         path: "check-out",
