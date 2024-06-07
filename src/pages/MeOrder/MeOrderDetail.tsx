@@ -1,4 +1,4 @@
-import { Button, Descriptions } from "antd";
+import { Button, Descriptions, Image } from "antd";
 import { useParams } from "react-router-dom";
 import { APIMeOrderItemsDetail } from "../../services/api";
 import { useEffect, useState } from "react";
@@ -69,20 +69,34 @@ const MeOrderDetail = () => {
           </Descriptions.Item>
         </Descriptions>
       </div>
-      <div className="order-item my-5">
-        <Descriptions title={"Image Product"} bordered>
-          <Descriptions.Item label="Status">
-            {meOrderDetails?.paymentInfo.status}
-          </Descriptions.Item>
-          <Descriptions.Item label="Method">
-            {meOrderDetails?.paymentMethod}
-          </Descriptions.Item>
-          <Descriptions.Item label="Stripe ID">null</Descriptions.Item>
-          <Descriptions.Item label="Amound Paid">
-            {meOrderDetails?.totalAmount}
-          </Descriptions.Item>
-        </Descriptions>
-      </div>
+      <div className="text-[17px] font-medium">Order Items</div>
+      {meOrderDetails?.orderItems.length !== 0 &&
+        meOrderDetails?.orderItems.map((order) => {
+          return (
+            <>
+              <div className="order-item my-5">
+                <Descriptions bordered>
+                  <Descriptions.Item label="Image Product">
+                    <Image
+                      src={order.product.images[0].url}
+                      width={100}
+                      height={100}
+                    />
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Name Product">
+                    {order.name}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Price">
+                    {order.price}
+                  </Descriptions.Item>
+                  <Descriptions.Item label="Quantity">
+                    {order.quantity} Piece(s)
+                  </Descriptions.Item>
+                </Descriptions>
+              </div>
+            </>
+          );
+        })}
     </div>
   );
 };

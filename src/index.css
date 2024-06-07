@@ -42,3 +42,17 @@ body {
 .ant-btn.css-dev-only-do-not-override-1drr2mu.ant-btn-primary {
   background-color: #167fff;
 }
+:where(
+    .css-dev-only-do-not-override-1drr2mu
+  ).ant-descriptions.ant-descriptions-bordered
+  > .ant-descriptions-view
+  .ant-descriptions-row
+  > .ant-descriptions-item-label,
+:where(
+    .css-dev-only-do-not-override-1drr2mu
+  ).ant-descriptions.ant-descriptions-bordered
+  > .ant-descriptions-view
+  .ant-descriptions-row
+  > .ant-descriptions-item-content {
+  padding: 16px 20px;
+}
