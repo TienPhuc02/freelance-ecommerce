@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { Table } from "antd";
+import { Button, Table } from "antd";
 import type { TableColumnsType, TableProps, TooltipProps } from "antd";
 import { APIMeOrder } from "../../services/api";
-import { EyeOutlined, PrinterOutlined } from "@ant-design/icons";
+
 import { useNavigate } from "react-router-dom";
 
 interface DataType {
@@ -18,6 +18,9 @@ const TableOrder: React.FC = () => {
   const navigate = useNavigate();
   const handleRedirectItemOrderDetail = (record: string) => {
     navigate(`/me/orders/${record}`);
+  };
+  const handleRedirectInvoiceOrder = (record: string) => {
+    navigate(`/invoice/orders/${record}`);
   };
   const columns: TableColumnsType<DataType> = [
     {
@@ -44,11 +47,18 @@ const TableOrder: React.FC = () => {
       render: (record: any) => {
         return (
           <div className="flex gap-3">
-            <EyeOutlined
-              className="text-[20px] cursor-pointer"
+            <Button
               onClick={() => handleRedirectItemOrderDetail(record)}
-            />
-            <PrinterOutlined className="text-[20px] cursor-pointer" />
+              type="text"
+            >
+              View
+            </Button>
+            <Button
+              type="text"
+              onClick={() => handleRedirectInvoiceOrder(record)}
+            >
+              Invoice
+            </Button>
           </div>
         );
       },

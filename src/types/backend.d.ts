@@ -18,8 +18,8 @@ declare global {
     shippingAmount: number;
     totalAmount: number;
     orderStatus: string;
-    createdAt: Date;
-    updatedAt: Date;
+    createdAt: string;
+    updatedAt: string;
     __v: number;
   }
 
@@ -44,8 +44,8 @@ declare global {
     numOfReview: number;
     reviews: any[];
     __v: number;
-    createdAt: string;
-    updatedAt: string;
+    createdAt?: string;
+    updatedAt?: string;
   }
 
   interface Image {

@@ -1,5 +1,5 @@
 import { Button, Descriptions, Image } from "antd";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { APIMeOrderItemsDetail } from "../../services/api";
 import { useEffect, useState } from "react";
 import { convertDateCol } from "../../utils/func.customize.date";
@@ -7,6 +7,7 @@ import { convertDateCol } from "../../utils/func.customize.date";
 const MeOrderDetail = () => {
   const { id } = useParams(); // Lấy id từ URL
   console.log(id);
+  const navigate = useNavigate();
   const [meOrderDetails, setMeOrderDetail] = useState<Order | null>(null);
   const GetAPIMeOrderItemsDetail = async () => {
     const res = await APIMeOrderItemsDetail(id as string);
@@ -19,13 +20,22 @@ const MeOrderDetail = () => {
   useEffect(() => {
     GetAPIMeOrderItemsDetail();
   }, []);
-
+  const handleRedirectInvoiceOrder = () => {
+    navigate(`/invoice/orders/${id}`);
+  };
   console.log("check order details >>", meOrderDetails);
   return (
     <div className="min-h-[610px] pt-3 max-w-[1000px] mx-auto">
       <div className="header-item-order-detail flex items-center justify-between my-3">
         <div>Your Order detail</div>
-        <Button type="primary">Invoice</Button>
+        <Button
+          type="primary"
+          onClick={() => {
+            handleRedirectInvoiceOrder();
+          }}
+        >
+          Invoice
+        </Button>
       </div>
       <div className="general-info">
         {meOrderDetails && (
@@ -79,8 +89,8 @@ const MeOrderDetail = () => {
                   <Descriptions.Item label="Image Product">
                     <Image
                       src={order.product.images[0].url}
-                      width={100}
-                      height={100}
+                      width={50}
+                      height={50}
                     />
                   </Descriptions.Item>
                   <Descriptions.Item label="Name Product">

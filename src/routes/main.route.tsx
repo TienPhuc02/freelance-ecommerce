@@ -16,6 +16,7 @@ import AdminDashBoard from "../pages/Admin/DashBoard/admin.dashboard";
 import AdminOrder from "../pages/Admin/Order/admin.order";
 import AdminProduct from "../pages/Admin/Product/admin.product";
 import AdminUser from "../pages/Admin/User/AdminUser";
+import InvoiceMeOrder from "../pages/MeOrder/InvoiceMeOrder";
 
 const router = createBrowserRouter([
   {
@@ -69,6 +70,10 @@ const router = createBrowserRouter([
             <CheckOutPage />
           </>
         ),
+      },
+      {
+        path: "/invoice/orders/:id",
+        element: <InvoiceMeOrder />,
       },
     ],
   },
