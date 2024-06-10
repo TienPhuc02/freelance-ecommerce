@@ -3,16 +3,19 @@ import { Link, useParams } from "react-router-dom";
 import { APIMeOrderItemsDetail } from "../../services/api";
 import { Button, Card, Descriptions, DescriptionsProps, Divider } from "antd";
 import { convertDateCol } from "../../utils/func.customize.date";
+import TableInvoiceMeOrder from "./TableInvoiceMeOrder";
 
 const InvoiceMeOrder = () => {
   const { id } = useParams<{ id: string }>();
-  console.log(id);
   const [meOrderDetails, setMeOrderDetail] = useState<Order | null>(null);
+  const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
+
   const GetAPIMeOrderItemsDetail = async (orderId: string) => {
     try {
       const res = await APIMeOrderItemsDetail(orderId);
       if (res && res.data) {
         setMeOrderDetail(res.data.order);
+        setOrderItems(res.data.order.orderItems);
       }
     } catch (error) {
       console.error("Failed to fetch order details:", error);
@@ -24,56 +27,56 @@ const InvoiceMeOrder = () => {
       GetAPIMeOrderItemsDetail(id);
     }
   }, [id]);
-  console.log("check meOrderDetails>>>", meOrderDetails);
+
   const items: DescriptionsProps["items"] = meOrderDetails
     ? [
         {
           key: "1",
           label: "Name",
-          children: meOrderDetails?.user.name,
+          children: meOrderDetails.user.name,
         },
         {
           key: "2",
           label: "Email",
-          children: meOrderDetails?.user.email,
+          children: meOrderDetails.user.email,
         },
         {
           key: "3",
           label: "Phone",
-          children: meOrderDetails?.shippingInfo.phoneNumber,
+          children: meOrderDetails.shippingInfo.phoneNumber,
         },
         {
           key: "4",
           label: "Address",
-          children: meOrderDetails?.shippingInfo.address,
+          children: meOrderDetails.shippingInfo.address,
         },
         {
           key: "5",
           label: "Date",
-          children: convertDateCol(meOrderDetails?.createdAt),
+          children: convertDateCol(meOrderDetails.createdAt),
         },
         {
-          key: "5",
+          key: "6",
           label: "Status",
           children: meOrderDetails.orderStatus,
         },
         {
-          key: "6",
+          key: "7",
           label: "Shop",
           children: "Shop IT",
         },
         {
-          key: "6",
+          key: "8",
           label: "Shop Address",
-          children: "Hồng Thái,Lạc Hồng,Văn Lâm,Hưng Yên",
+          children: "Hồng Thái, Lạc Hồng, Văn Lâm, Hưng Yên",
         },
         {
-          key: "7",
+          key: "9",
           label: "Phone Shop",
           children: "1234445557",
         },
         {
-          key: "8",
+          key: "10",
           label: "Link Shop",
           children: (
             <Link to={`https://github.com/TienPhuc02`}>
@@ -83,6 +86,7 @@ const InvoiceMeOrder = () => {
         },
       ]
     : [];
+
   return (
     <div className="min-h-[610px] pt-3 max-w-[1000px] mx-auto">
       <div className="button-invoice-order my-3 max-w-[500px] mx-auto">
@@ -96,7 +100,7 @@ const InvoiceMeOrder = () => {
             <img
               className="h-[100px] w-[100px] mr-[12px]"
               src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
-              alt=""
+              alt="Shop Logo"
             />
             <div className="title-shop mt-3 text-[25px] font-semibold">
               SHOP IT
@@ -110,7 +114,7 @@ const InvoiceMeOrder = () => {
             <Divider className="my-[0px]" />
           </div>
           <div className="info-user info-shop mt-6">
-            {meOrderDetails !== null && (
+            {meOrderDetails && (
               <Descriptions
                 items={items}
                 layout="horizontal"
@@ -119,7 +123,12 @@ const InvoiceMeOrder = () => {
             )}
           </div>
           <div className="table-invoice-me-order">
-            
+            {orderItems.length > 0 && (
+              <TableInvoiceMeOrder
+                orderItems={orderItems}
+                meOrderDetails={meOrderDetails}
+              />
+            )}
           </div>
         </Card>
       </div>
