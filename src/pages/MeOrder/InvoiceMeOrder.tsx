@@ -1,15 +1,16 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { APIMeOrderItemsDetail } from "../../services/api";
 import { Button, Card, Descriptions, DescriptionsProps, Divider } from "antd";
 import { convertDateCol } from "../../utils/func.customize.date";
 import TableInvoiceMeOrder from "./TableInvoiceMeOrder";
-
+import { jsPDF } from "jspdf";
+import html2canvas from "html2canvas";
 const InvoiceMeOrder = () => {
   const { id } = useParams<{ id: string }>();
   const [meOrderDetails, setMeOrderDetail] = useState<Order | null>(null);
   const [orderItems, setOrderItems] = useState<OrderItem[]>([]);
-
+  const RefOrderInvoice = useRef(null);
   const GetAPIMeOrderItemsDetail = async (orderId: string) => {
     try {
       const res = await APIMeOrderItemsDetail(orderId);
@@ -86,20 +87,49 @@ const InvoiceMeOrder = () => {
         },
       ]
     : [];
+  const downloadPdf = async () => {
+    const flowElement = RefOrderInvoice.current!;
+    const canvas = await html2canvas(flowElement);
+    const imgData = canvas.toDataURL("image/png");
+    const pdf = new jsPDF({
+      orientation: "landscape",
+      unit: "mm",
+      format: "a4",
+    });
+    const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
 
+    const imgProps = pdf.getImageProperties(imgData);
+    const imgWidth = imgProps.width;
+    const imgHeight = imgProps.height;
+
+    let pdfImgWidth, pdfImgHeight;
+    if (imgWidth / imgHeight > pageWidth / pageHeight) {
+      pdfImgWidth = pageWidth;
+      pdfImgHeight = (imgHeight * pageWidth) / imgWidth;
+    } else {
+      pdfImgHeight = pageHeight;
+      pdfImgWidth = (imgWidth * pageHeight) / imgHeight;
+    }
+    const xOffset = (pageWidth - pdfImgWidth) / 2;
+    const yOffset = (pageHeight - pdfImgHeight) / 2;
+
+    pdf.addImage(imgData, "PNG", xOffset, yOffset, pdfImgWidth, pdfImgHeight);
+    pdf.save("order-invoice.pdf");
+  };
   return (
     <div className="min-h-[610px] pt-3 max-w-[1000px] mx-auto">
       <div className="button-invoice-order my-3 max-w-[500px] mx-auto">
-        <Button type="primary" block>
+        <Button type="primary" block onClick={() => downloadPdf()}>
           Download Invoice
         </Button>
       </div>
-      <div className="order-invoice">
+      <div className="order-invoice" ref={RefOrderInvoice}>
         <Card>
           <div className="logo-invoice flex justify-center items-center flex-col">
             <img
               className="h-[100px] w-[100px] mr-[12px]"
-              src="https://gw.alipayobjects.com/zos/rmsportal/KDpgvguMpGfqaHPjicRK.svg"
+              src="/public/logo_invoice.svg"
               alt="Shop Logo"
             />
             <div className="title-shop mt-3 text-[25px] font-semibold">
