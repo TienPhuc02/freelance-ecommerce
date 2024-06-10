@@ -27,7 +27,9 @@ const columns = [
   {
     title: "Total",
     render: (record: any) => {
-      return <>${record.quantity * record.price}</>;
+      const total = record.quantity * record.price;
+      const formattedTotal = total.toFixed(2); // Lấy hai chữ số sau dấu phẩy
+      return <>{formattedTotal}</>;
     },
   },
 ];
@@ -41,12 +43,20 @@ const TableInvoiceMeOrder = ({
     {
       key: "1",
       label: "SubTotal",
-      children: <>${meOrderDetails.itemsPrice}</>,
+      children: <>${meOrderDetails.itemsPrice.toFixed(2)}</>,
     },
     {
       key: "2",
       label: <>Tax {meOrderDetails.taxAmount}%</>,
-      children: <>${meOrderDetails.itemsPrice * meOrderDetails.taxAmount}</>,
+      children: (
+        <>
+          $
+          {(
+            (meOrderDetails.itemsPrice * meOrderDetails.taxAmount) /
+            100
+          ).toFixed(2)}
+        </>
+      ),
     },
     {
       key: "3",
@@ -59,9 +69,11 @@ const TableInvoiceMeOrder = ({
       children: (
         <>
           $
-          {meOrderDetails.shippingAmount +
-            meOrderDetails.itemsPrice * meOrderDetails.taxAmount +
-            meOrderDetails.itemsPrice}
+          {(
+            meOrderDetails.shippingAmount +
+            (meOrderDetails.itemsPrice * meOrderDetails.taxAmount) / 100 +
+            meOrderDetails.itemsPrice
+          ).toFixed(2)}
         </>
       ),
     },

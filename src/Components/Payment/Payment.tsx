@@ -1,7 +1,7 @@
 import { Button, Card, Checkbox, notification } from "antd";
 import { useState } from "react";
 import { IDataCreateOrder } from "../../pages/CheckOut/CheckOut";
-import { APICreateOrderCOD, APIPaymentStripeSession } from "../../services/api";
+import { APICreateOrder, APIPaymentStripeSession } from "../../services/api";
 import { useNavigate } from "react-router-dom";
 import { loadStripe } from "@stripe/stripe-js";
 import { useDispatch } from "react-redux";
@@ -32,13 +32,60 @@ const Payment = ({ dataOrder, setDataOrder }: IPropsPayment) => {
     }));
   };
 
+  // const handleSubmitCreateOrder = async () => {
+  //   if (selectedValue === "COD") {
+  //     // Xử lý Thanh toán khi giao hàng
+  //     const res = await APICreateOrderCOD(dataOrder);
+  //     console.log(res);
+  //     dispatch(doClearCart());
+  //     navigate("/me/orders");
+  //   } else if (selectedValue === "Card") {
+  //     // Xử lý thanh toán Stripe
+  //     const response = await APIPaymentStripeSession(dataOrder);
+
+  //     if (!response) {
+  //       notification.error({
+  //         message: "Lỗi",
+  //         description: "Không thể tạo phiên thanh toán của Stripe.",
+  //       });
+  //       return;
+  //     }
+
+  //     const { sessionId } = response; // sessionId trả về từ APIPaymentStripeSession
+
+  //     const stripe = await stripePromise;
+
+  //     if (stripe) {
+  //       const { error } = await stripe.redirectToCheckout({
+  //         sessionId: sessionId,
+  //       });
+  //       //https://docs.stripe.com/testing#cards
+  //       //4242424242424242
+  //       if (error) {
+  //         console.error(
+  //           "Lỗi khi chuyển hướng đến trang thanh toán của Stripe:",
+  //           error
+  //         );
+  //       } else {
+  //         dispatch(doClearCart());
+  //       }
+  //     }
+  //   }
+  // };
+
   const handleSubmitCreateOrder = async () => {
     if (selectedValue === "COD") {
       // Xử lý Thanh toán khi giao hàng
-      const res = await APICreateOrderCOD(dataOrder);
-      console.log(res);
-      dispatch(doClearCart());
-      navigate("/me/orders");
+      const res = await APICreateOrder(dataOrder);
+      if (res) {
+        dispatch(doClearCart());
+        navigate("/me/orders");
+      } else {
+        notification.error({
+          message: "Lỗi",
+          description: "Không thể tạo đơn hàng.",
+        });
+      }
     } else if (selectedValue === "Card") {
       // Xử lý thanh toán Stripe
       const response = await APIPaymentStripeSession(dataOrder);
@@ -59,20 +106,28 @@ const Payment = ({ dataOrder, setDataOrder }: IPropsPayment) => {
         const { error } = await stripe.redirectToCheckout({
           sessionId: sessionId,
         });
-        //https://docs.stripe.com/testing#cards
-        //4242424242424242
+
         if (error) {
           console.error(
             "Lỗi khi chuyển hướng đến trang thanh toán của Stripe:",
             error
           );
         } else {
-          dispatch(doClearCart());
+          // Gọi API để tạo đơn hàng và cập nhật stock sau khi thanh toán thành công
+          const createOrderRes = await APICreateOrder(dataOrder);
+          if (createOrderRes) {
+            dispatch(doClearCart());
+            navigate("/me/orders");
+          } else {
+            notification.error({
+              message: "Lỗi",
+              description: "Không thể tạo đơn hàng.",
+            });
+          }
         }
       }
     }
   };
-
   return (
     <div className="max-w-[400px] mx-auto mt-5">
       <Card style={{ width: 400 }}>

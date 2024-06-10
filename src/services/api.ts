@@ -71,7 +71,7 @@ export const APIUpdateUserById = (
     role: role,
   });
 };
-export const APICreateOrderCOD = (dataOrder: IDataCreateOrder) => {
+export const APICreateOrder = (dataOrder: IDataCreateOrder) => {
   return axios.post("/orders/new", dataOrder);
 };
 export const APIPaymentStripeSession = async (dataOrder: IDataCreateOrder) => {
