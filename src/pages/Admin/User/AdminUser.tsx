@@ -1,5 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Button, Image, Input, Popconfirm, Space, Table } from "antd";
+import * as XLSX from "xlsx";
 import type {
   InputRef,
   TableColumnType,
@@ -13,6 +14,7 @@ import {
 } from "../../../services/api";
 import DrawerDetailUser from "./DrawerUser";
 import {
+  ExportOutlined,
   ImportOutlined,
   QuestionCircleOutlined,
   SearchOutlined,
@@ -385,7 +387,14 @@ const AdminUser: React.FC = () => {
     clearFilters();
     setSearchText("");
   };
-
+  const downloadUserExcel = () => {
+    if (listUser.length > 0) {
+      const worksheet = XLSX.utils.json_to_sheet(listUser);
+      const workbook = XLSX.utils.book_new();
+      XLSX.utils.book_append_sheet(workbook, worksheet, "Sheet1");
+      XLSX.writeFile(workbook, "ListUser.xlsx");
+    }
+  };
   return (
     <div>
       <div className="btn-export btn-import mb-4 btn-create flex justify-end">
@@ -399,6 +408,14 @@ const AdminUser: React.FC = () => {
         >
           <ImportOutlined />
           Import User For XLSX
+        </Button>
+        <Button
+          type="default"
+          className="ml-4 flex items-center"
+          onClick={downloadUserExcel}
+        >
+          <ExportOutlined />
+          Export User For XLSX
         </Button>
       </div>
       <Table
@@ -436,6 +453,7 @@ const AdminUser: React.FC = () => {
         handleCancelModalCreateUser={handleCancelModalCreateUser}
       />
       <ModalCreateUserXLSX
+        getAllUserTable={getAllUserTable}
         fileList={fileList}
         isModalUpdateUserXLSXOpen={isModalUpdateUserXLSXOpen}
         handleOkModalCreateUserXLSX={handleOkModalCreateUserXLSX}

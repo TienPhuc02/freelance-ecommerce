@@ -1,6 +1,6 @@
 import { InboxOutlined } from "@ant-design/icons";
 import { Modal, Table, Upload, message, notification } from "antd";
-import React, { useState } from "react";
+import React from "react";
 import * as XLSX from "xlsx";
 import template from "./data/template.xlsx?url";
 import { APICreateBulkUser } from "../../../services/api";
@@ -13,6 +13,7 @@ type IProps = {
   setFileList: React.Dispatch<React.SetStateAction<never[]>>;
   dataExcel: never[] | DataExcel[];
   fileList: never[];
+  getAllUserTable: () => Promise<void>;
 };
 
 const ModalCreateUserXLSX = ({
@@ -21,6 +22,7 @@ const ModalCreateUserXLSX = ({
   setDataExcel,
   setFileList,
   dataExcel,
+  getAllUserTable,
   fileList,
   setIsModalUpdateUserXLSXOpen,
 }: IProps) => {
@@ -80,8 +82,8 @@ const ModalCreateUserXLSX = ({
               const workbook = XLSX.read(data, { type: "array" });
               const sheet = workbook.Sheets[workbook.SheetNames[0]];
               const json = XLSX.utils.sheet_to_json(sheet, {
-                header: ["name", "email", "role"], // Adjust header based on your Excel structure
-                range: 1, // Skip the first row if it's a header
+                header: ["name", "email", "role"],
+                range: 1,
               }) as DataExcel[];
 
               if (json && json.length > 0) {
@@ -118,16 +120,15 @@ const ModalCreateUserXLSX = ({
       setDataExcel([]);
       setFileList([]);
       setIsModalUpdateUserXLSXOpen(false);
-      //   props.fetchUser();
+      getAllUserTable();
     } else {
       notification.error({
-        // description: `Error:${res?.message[0]}`,
         message: "upload thất bại",
       });
       setDataExcel([]);
       setFileList([]);
       setIsModalUpdateUserXLSXOpen(false);
-      //   props.fetchUser();
+      getAllUserTable();
     }
   };
 
