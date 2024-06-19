@@ -41,7 +41,7 @@ export const APIUploadAvatar = (urlImage: string) => {
   const formData = new FormData();
   formData.append("avatar", urlImage);
   const config = {
-    headers: { "content-type": "multipart/form-data" },
+    headers: { "Content-Type": "multipart/form-data" },
   };
   return axios.put("me/upload_avatar", formData, config);
 };
@@ -88,4 +88,27 @@ export const APIMeOrder = () => {
 };
 export const APIMeOrderItemsDetail = (id: string) => {
   return axios.get(`/orders/${id}`);
+};
+
+export const APICreateNewUser = (data: createUser) => {
+  const formData = new FormData();
+
+  // Append each field to formData
+  if (data.email) formData.append("email", data.email);
+  if (data.name) formData.append("name", data.name);
+  if (data.role) formData.append("role", data.role);
+  if (data.password) formData.append("password", data.password);
+
+  // Only append avatar if it exists
+  if (data.avatar) formData.append("avatar", data.avatar);
+
+  const config = {
+    headers: { "Content-Type": "multipart/form-data" },
+  };
+
+  return axios.post("/admin/users", formData, config);
+};
+
+export const APICreateBulkUser = (data: DataExcel[]) => {
+  return axios.post("/admin/users/bulk-create", data);
 };

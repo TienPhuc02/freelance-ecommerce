@@ -83,4 +83,17 @@ declare global {
     public_id: string;
     url: string;
   }
+  interface createUser {
+    email?: string;
+    name?: string;
+    role?: string;
+    password?: string;
+    avatar?: string;
+  }
+  interface DataExcel {
+    name: string;
+    email: string;
+    role: string;
+    password?: string | number;
+  }
 }

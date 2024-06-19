@@ -1,14 +1,27 @@
-import React, { useEffect, useState } from "react";
-import { Button, Image, Popconfirm, Table } from "antd";
-import type { TableColumnsType, TableProps } from "antd";
+import React, { useEffect, useRef, useState } from "react";
+import { Button, Image, Input, Popconfirm, Space, Table } from "antd";
+import type {
+  InputRef,
+  TableColumnType,
+  TableColumnsType,
+  TableProps,
+} from "antd";
 import {
   APIDeleteUserById,
   APIGetAllUsers,
   APIGetUserById,
 } from "../../../services/api";
 import DrawerDetailUser from "./DrawerUser";
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import {
+  ImportOutlined,
+  QuestionCircleOutlined,
+  SearchOutlined,
+} from "@ant-design/icons";
+import ModalCreateUser from "./ModalCreateUser";
+import { FilterDropdownProps } from "antd/es/table/interface";
+import Highlighter from "react-highlight-words";
 import ModalUpdateUser from "./ModalUpadteUser";
+import ModalCreateUserXLSX from "./ModalCreateUserXLSX";
 
 interface DataTypeUser {
   _id: string;
@@ -16,12 +29,16 @@ interface DataTypeUser {
   email: string;
   role: string;
   createdAt: string;
+  updatedAt: string;
 }
-
+type DataIndex = keyof DataTypeUser;
 const AdminUser: React.FC = () => {
   const [listUser, setListUser] = useState<DataTypeUser[]>([]);
   const [openDrawer, setOpenDrawer] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [dataExcel, setDataExcel] = useState<DataExcel[] | never[]>([]);
+  console.log("check dataExcel>>>", dataExcel);
+  const [fileList, setFileList] = useState([]);
   const [dataUserView, setDataUserView] = useState({
     id: "",
     name: "",
@@ -38,7 +55,39 @@ const AdminUser: React.FC = () => {
     role: "",
   });
   const [isModalUpdateUserOpen, setIsModalUpdateUserOpen] = useState(false);
+  const [isModalOpenModalCreateUser, setIsModalOpenModalCreateUser] =
+    useState(false);
+  const [isModalUpdateUserXLSXOpen, setIsModalUpdateUserXLSXOpen] =
+    useState(false);
 
+  const showModalCreateUser = () => {
+    setIsModalOpenModalCreateUser(true);
+  };
+
+  const handleOkModalCreateUser = () => {
+    setIsModalOpenModalCreateUser(false);
+  };
+
+  const handleCancelModalCreateUser = () => {
+    setIsModalOpenModalCreateUser(false);
+  };
+  const showModalCreateUserXLSX = () => {
+    setIsModalUpdateUserXLSXOpen(true);
+  };
+
+  const handleOkModalCreateUserXLSX = () => {
+    setIsModalUpdateUserXLSXOpen(false);
+    setDataExcel([]);
+    setFileList([]);
+    setIsModalUpdateUserXLSXOpen(false);
+  };
+
+  const handleCancelModalCreateUserXLSX = () => {
+    setIsModalUpdateUserXLSXOpen(false);
+    setDataExcel([]);
+    setFileList([]);
+    setIsModalUpdateUserXLSXOpen(false);
+  };
   const handleShowModalUpdateUser = async (id: string) => {
     const res = await APIGetUserById(id);
     if (res && res?.data) {
@@ -98,18 +147,113 @@ const AdminUser: React.FC = () => {
     return formattedDate;
   };
 
+  const handleDeleteUser = async (id: string) => {
+    setIsLoading(true);
+    const res = await APIDeleteUserById(id);
+    if (res && res.data) {
+      getAllUserTable();
+    }
+    setIsLoading(false);
+  };
+  const getColumnSearchProps = (
+    dataIndex: DataIndex
+  ): TableColumnType<DataTypeUser> => ({
+    filterDropdown: ({
+      setSelectedKeys,
+      selectedKeys,
+      confirm,
+      clearFilters,
+      close,
+    }) => (
+      <div style={{ padding: 8 }} onKeyDown={(e) => e.stopPropagation()}>
+        <Input
+          ref={searchInput}
+          placeholder={`Search ${dataIndex}`}
+          value={selectedKeys[0]}
+          onChange={(e) =>
+            setSelectedKeys(e.target.value ? [e.target.value] : [])
+          }
+          onPressEnter={() =>
+            handleSearch(selectedKeys as string[], confirm, dataIndex)
+          }
+          style={{ marginBottom: 8, display: "block" }}
+        />
+        <Space>
+          <Button
+            type="primary"
+            onClick={() =>
+              handleSearch(selectedKeys as string[], confirm, dataIndex)
+            }
+            icon={<SearchOutlined />}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Search
+          </Button>
+          <Button
+            onClick={() => clearFilters && handleReset(clearFilters)}
+            size="small"
+            style={{ width: 90 }}
+          >
+            Reset
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              confirm({ closeDropdown: false });
+              setSearchText((selectedKeys as string[])[0]);
+              setSearchedColumn(dataIndex);
+            }}
+          >
+            Filter
+          </Button>
+          <Button
+            type="link"
+            size="small"
+            onClick={() => {
+              close();
+            }}
+          >
+            close
+          </Button>
+        </Space>
+      </div>
+    ),
+    filterIcon: (filtered: boolean) => (
+      <SearchOutlined style={{ color: filtered ? "#1677ff" : undefined }} />
+    ),
+    onFilter: (value, record) =>
+      record[dataIndex]
+        .toString()
+        .toLowerCase()
+        .includes((value as string).toLowerCase()),
+    onFilterDropdownOpenChange: (visible) => {
+      if (visible) {
+        setTimeout(() => searchInput.current?.select(), 100);
+      }
+    },
+    render: (text) =>
+      searchedColumn === dataIndex ? (
+        <Highlighter
+          highlightStyle={{ backgroundColor: "#ffc069", padding: 0 }}
+          searchWords={[searchText]}
+          autoEscape
+          textToHighlight={text ? text.toString() : ""}
+        />
+      ) : (
+        text
+      ),
+  });
+
   const columns: TableColumnsType<DataTypeUser> = [
     {
       title: "Id",
       dataIndex: "_id",
       render: (record: any) => {
-        console.log(record);
         return (
           <div
-            onClick={() => {
-              console.log(record);
-              getUserById(record);
-            }}
+            onClick={() => getUserById(record)}
             className="hover:text-[#167fff] cursor-pointer"
           >
             {record}
@@ -122,16 +266,19 @@ const AdminUser: React.FC = () => {
       dataIndex: "name",
       sorter: (a, b) => a.name.length - b.name.length,
       sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("name"),
     },
     {
       title: "Email",
       dataIndex: "email",
       sorter: (a, b) => a.email.length - b.email.length,
       sortDirections: ["descend", "ascend"],
+      ...getColumnSearchProps("email"),
     },
     {
       title: "Role",
       dataIndex: "role",
+      ...getColumnSearchProps("role"),
     },
     {
       title: "Avatar",
@@ -163,6 +310,15 @@ const AdminUser: React.FC = () => {
       },
     },
     {
+      title: "Updated At",
+      dataIndex: "updatedAt",
+      sorter: (a, b) =>
+        new Date(a.updatedAt).getTime() - new Date(b.updatedAt).getTime(),
+      render: (record: any) => {
+        return <>{convertDateCol(record)}</>;
+      },
+    },
+    {
       title: "Action",
       dataIndex: "_id",
       render: (record: any) => {
@@ -172,17 +328,9 @@ const AdminUser: React.FC = () => {
               title="Delete This User"
               description="Are you sure to delete this user?"
               icon={<QuestionCircleOutlined style={{ color: "red" }} />}
+              onConfirm={() => handleDeleteUser(record)}
               okButtonProps={{ style: { backgroundColor: "#167fff" } }}
-              okText={
-                <div
-                  onClick={() => {
-                    console.log(record);
-                    handleDeleteUser(record);
-                  }}
-                >
-                  Delete
-                </div>
-              }
+              okText="Delete"
             >
               <Button type="primary" className="mr-3 bg-[#167fff]">
                 Delete
@@ -210,15 +358,6 @@ const AdminUser: React.FC = () => {
     getAllUserTable();
   }, []);
 
-  const handleDeleteUser = async (id: string) => {
-    setIsLoading(true);
-    const res = await APIDeleteUserById(id);
-    if (res && res.data) {
-      getAllUserTable();
-    }
-    setIsLoading(false);
-  };
-
   const onChange: TableProps<DataTypeUser>["onChange"] = (
     pagination,
     filters,
@@ -228,8 +367,40 @@ const AdminUser: React.FC = () => {
     console.log("params", pagination, filters, sorter, extra);
   };
 
+  const [searchText, setSearchText] = useState("");
+  const [searchedColumn, setSearchedColumn] = useState<DataIndex | "">("");
+  const searchInput = useRef<InputRef>(null);
+
+  const handleSearch = (
+    selectedKeys: string[],
+    confirm: FilterDropdownProps["confirm"],
+    dataIndex: DataIndex
+  ) => {
+    confirm();
+    setSearchText(selectedKeys[0]);
+    setSearchedColumn(dataIndex);
+  };
+
+  const handleReset = (clearFilters: () => void) => {
+    clearFilters();
+    setSearchText("");
+  };
+
   return (
     <div>
+      <div className="btn-export btn-import mb-4 btn-create flex justify-end">
+        <Button type="primary" className="" onClick={showModalCreateUser}>
+          Create User
+        </Button>
+        <Button
+          type="text"
+          className="ml-4 flex items-center"
+          onClick={showModalCreateUserXLSX}
+        >
+          <ImportOutlined />
+          Import User For XLSX
+        </Button>
+      </div>
       <Table
         loading={isLoading}
         scroll={{ x: 1500 }}
@@ -258,6 +429,21 @@ const AdminUser: React.FC = () => {
         dataUserUpdate={dataUserUpdate}
         setIsLoading={setIsLoading}
         getAllUserTable={getAllUserTable}
+      />
+      <ModalCreateUser
+        isModalOpenModalCreateUser={isModalOpenModalCreateUser}
+        handleOkModalCreateUser={handleOkModalCreateUser}
+        handleCancelModalCreateUser={handleCancelModalCreateUser}
+      />
+      <ModalCreateUserXLSX
+        fileList={fileList}
+        isModalUpdateUserXLSXOpen={isModalUpdateUserXLSXOpen}
+        handleOkModalCreateUserXLSX={handleOkModalCreateUserXLSX}
+        setDataExcel={setDataExcel}
+        setFileList={setFileList}
+        dataExcel={dataExcel}
+        handleCancelModalCreateUserXLSX={handleCancelModalCreateUserXLSX}
+        setIsModalUpdateUserXLSXOpen={setIsModalUpdateUserXLSXOpen}
       />
     </div>
   );
