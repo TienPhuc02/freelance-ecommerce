@@ -1,4 +1,6 @@
-import { Drawer, Image, Input } from "antd";
+import React from "react";
+import { Drawer, Descriptions, Image } from "antd";
+
 type PropsDrawer = {
   onCloseDrawer: () => void;
   openDrawer: boolean;
@@ -13,70 +15,77 @@ type PropsDrawer = {
   };
   convertDateCol: (dateInput: string) => string;
 };
+
 const DrawerDetailUser = ({
   onCloseDrawer,
   openDrawer,
   dataUserView,
   convertDateCol,
 }: PropsDrawer) => {
+  const items = [
+    {
+      key: "1",
+      label: "ID",
+      children: dataUserView.id,
+      span: 3,
+    },
+    {
+      key: "2",
+      label: "Name",
+      children: dataUserView.name,
+      span: 3,
+    },
+    {
+      key: "3",
+      label: "Email",
+      children: dataUserView.email,
+      span: 3,
+    },
+    {
+      key: "4",
+      label: "Role",
+      children: dataUserView.role,
+      span: 3,
+    },
+    {
+      key: "5",
+      label: "Created At",
+      children: convertDateCol(dataUserView.createdAt),
+      span: 3,
+    },
+    {
+      key: "6",
+      label: "Reset Password Expire",
+      children: convertDateCol(dataUserView.resetPasswordExpire),
+      span: 3,
+    },
+    {
+      key: "7",
+      label: "Avatar",
+      children:
+        dataUserView.url !== "" ? (
+          <Image
+            width={150}
+            height={150}
+            src={`${dataUserView.url}`}
+            alt="avatar user"
+          />
+        ) : (
+          "No avatar"
+        ),
+      span: 3,
+    },
+  ];
+
   return (
-    <>
-      <Drawer
-        title="Basic Drawer"
-        width={600}
-        onClose={onCloseDrawer}
-        open={openDrawer}
-      >
-        <div className="flex flex-col">
-          <div className="flex mb-10">
-            <div className="flex flex-col mr-5">
-              <span className="mb-2">Id</span>
-              <Input defaultValue={dataUserView.id} className="w-[250px]" />
-            </div>
-            <div className="flex flex-col ">
-              <span className="mb-2">Name</span>
-              <Input defaultValue={dataUserView.name} className="w-[250px]" />
-            </div>
-          </div>
-          <div className="flex mb-10">
-            <div className="flex flex-col mr-5">
-              <span className="mb-2">Email</span>
-              <Input defaultValue={dataUserView.email} className="w-[250px]" />
-            </div>
-            <div className="flex flex-col ">
-              <span className="mb-2">Role</span>
-              <Input defaultValue={dataUserView.role} className="w-[250px]" />
-            </div>
-          </div>
-          <div className="flex mb-10">
-            <div className="flex flex-col mr-5">
-              <span className="mb-2">Created At</span>
-              <Input
-                defaultValue={convertDateCol(dataUserView.createdAt)}
-                className="w-[250px]"
-              />
-            </div>
-            <div className="flex flex-col ">
-              <span className="mb-2">Reset Password Expire</span>
-              <Input
-                defaultValue={convertDateCol(dataUserView.resetPasswordExpire)}
-                className="w-[250px]"
-              />
-            </div>
-          </div>
-          {dataUserView.url !== "" ? (
-            <Image
-              width={150}
-              height={150}
-              src={`${dataUserView.url}`}
-              alt="avatar user"
-            />
-          ) : (
-            "avatar user"
-          )}
-        </div>
-      </Drawer>
-    </>
+    <Drawer
+      title="User Details"
+      width={600}
+      onClose={onCloseDrawer}
+      open={openDrawer}
+    >
+      <Descriptions bordered column={1} items={items} />
+    </Drawer>
   );
 };
 

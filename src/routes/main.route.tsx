@@ -14,7 +14,7 @@ import MeOrder from "../pages/MeOrder/MeOrder";
 import MeOrderDetail from "../pages/MeOrder/MeOrderDetail";
 import AdminDashBoard from "../pages/Admin/DashBoard/admin.dashboard";
 import AdminOrder from "../pages/Admin/Order/admin.order";
-import AdminProduct from "../pages/Admin/Product/admin.product";
+import AdminProduct from "../pages/Admin/Product/AdminProduct";
 import AdminUser from "../pages/Admin/User/AdminUser";
 import InvoiceMeOrder from "../pages/MeOrder/InvoiceMeOrder";
 

@@ -112,3 +112,4 @@ export const APICreateNewUser = (data: createUser) => {
 export const APICreateBulkUser = (data: DataExcel[]) => {
   return axios.post("/admin/users/bulk-create", data);
 };
+
