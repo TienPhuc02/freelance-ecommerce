@@ -123,7 +123,7 @@ export const APICreateNewUser = (data: createUser) => {
 export const APICreateBulkUser = (data: DataExcel[]) => {
   return axios.post("/admin/users/bulk-create", data);
 };
-export const APICreateNewProduct = async (data: any) => {
+export const APICreateNewProduct = (data: any) => {
   const formData = new FormData();
   console.log("check data", data);
   formData.append("name", data.name);
@@ -143,4 +143,7 @@ export const APICreateNewProduct = async (data: any) => {
   };
 
   return axios.post("/admin/products", formData, config);
+};
+export const APIDeleteProduct = (id: string) => {
+  return axios.delete(`/admin/products/${id}`);
 };

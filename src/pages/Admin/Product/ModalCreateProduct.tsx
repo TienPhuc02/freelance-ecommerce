@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Col, Modal, Row, Select } from "antd";
+import { Col, Modal, Row, Select, message } from "antd";
 import type { FormProps, GetProp } from "antd";
 import { Button, Form, Input } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
@@ -18,6 +18,7 @@ type TypePropModalCreateProduct = {
   setIsModalOpenModalCreateProduct: React.Dispatch<
     React.SetStateAction<boolean>
   >;
+  getAllListProduct: () => Promise<void>;
 };
 
 const ModalCreateProduct = ({
@@ -25,6 +26,7 @@ const ModalCreateProduct = ({
   handleCancelModalCreateProduct,
   isModalOpenModalCreateProduct,
   setIsModalOpenModalCreateProduct,
+  getAllListProduct,
 }: TypePropModalCreateProduct) => {
   type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -46,9 +48,13 @@ const ModalCreateProduct = ({
   const onFinish: FormProps<any>["onFinish"] = async (values) => {
     const formData = { ...values, images: uploadedFiles };
     console.log("check fromData", formData);
-    const res = await APICreateNewProduct(formData);
+    const res = (await APICreateNewProduct(formData)) as any;
     console.log("check res", res);
-    setIsModalOpenModalCreateProduct(false);
+    if (res && res.data) {
+      message.success(res?.data?.message);
+      setIsModalOpenModalCreateProduct(false);
+      getAllListProduct();
+    }
   };
 
   const { TextArea } = Input;
@@ -102,7 +108,7 @@ const ModalCreateProduct = ({
         open={isModalOpenModalCreateProduct}
         onOk={handleOkModalCreateProduct}
         onCancel={handleCancelModalCreateProduct}
-        width={600}
+        width={700}
       >
         <Form
           form={form}
@@ -243,10 +249,10 @@ const ModalCreateProduct = ({
             <TextArea
               allowClear
               showCount
-              maxLength={100}
+              maxLength={400}
               onChange={onChange}
-              placeholder="description product"
-              style={{ height: 120, resize: "none" }}
+              placeholder="Description New Product"
+              style={{ height: 120, resize: "none", width: 600 }}
             />
           </Form.Item>
           <Form.Item wrapperCol={{ offset: 8, span: 16 }}>

@@ -1,15 +1,19 @@
 import React, { useEffect, useRef, useState } from "react";
-import { SearchOutlined } from "@ant-design/icons";
+import { QuestionCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import type {
   InputRef,
   TableColumnsType,
   TableColumnType,
   TableProps,
 } from "antd";
-import { Button, Input, Space, Table } from "antd";
+import { Button, Input, Popconfirm, Space, Table } from "antd";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
-import { APIGetAllProduct, APIGetDetailProduct } from "../../../services/api";
+import {
+  APIDeleteProduct,
+  APIGetAllProduct,
+  APIGetDetailProduct,
+} from "../../../services/api";
 import { convertDateCol } from "../../../utils/func.customize.date";
 import DrawerProduct from "./DrawerProduct";
 import ModalCreateProduct from "./ModalCreateProduct";
@@ -93,7 +97,14 @@ const AdminProduct = () => {
     setSearchText(selectedKeys[0]);
     setSearchedColumn(dataIndex);
   };
-
+  const handleDeleteProduct = async (id: string) => {
+    setIsLoading(true);
+    const res = await APIDeleteProduct(id);
+    if (res && res.data) {
+      getAllListProduct();
+    }
+    setIsLoading(false);
+  };
   const handleReset = (clearFilters: () => void) => {
     clearFilters();
     setSearchText("");
@@ -298,6 +309,32 @@ const AdminProduct = () => {
         return <>{convertDateCol(record)}</>;
       },
     },
+    {
+      title: "Action",
+      dataIndex: "_id",
+      render: (record: any) => {
+        return (
+          <div style={{ display: "flex", flexDirection: "row" }}>
+            <Popconfirm
+              title="Delete This Product"
+              description="Are you sure to delete this product?"
+              icon={<QuestionCircleOutlined style={{ color: "red" }} />}
+              onConfirm={() => handleDeleteProduct(record)}
+              okButtonProps={{ style: { backgroundColor: "#167fff" } }}
+              okText="Delete"
+            >
+              <Button type="primary" className="mr-3 bg-[#167fff]">
+                Delete
+              </Button>
+            </Popconfirm>
+            {/* <Button onClick={() => handleShowModalUpdateUser(record)}>
+              Update
+            </Button> */}
+            <Button>Update</Button>
+          </div>
+        );
+      },
+    },
   ];
   const onChange: TableProps<DataProductType>["onChange"] = (
     pagination,
@@ -341,6 +378,7 @@ const AdminProduct = () => {
         isModalOpenModalCreateProduct={isModalOpenModalCreateProduct}
         handleOkModalCreateProduct={handleOkModalCreateProduct}
         handleCancelModalCreateProduct={handleCancelModalCreateProduct}
+        getAllListProduct={getAllListProduct}
       />
     </>
   );
