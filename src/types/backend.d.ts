@@ -90,6 +90,16 @@ declare global {
     password?: string;
     avatar?: string;
   }
+  interface createProduct {
+    name: string;
+    price: number;
+    description: string;
+    category: string;
+    seller: string;
+    images: Image[];
+    stock: number;
+    ratings: number;
+  }
   interface DataExcel {
     name: string;
     email: string;

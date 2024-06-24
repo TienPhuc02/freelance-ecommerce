@@ -180,7 +180,7 @@ const HeaderComponent = () => {
       {nameUser ? (
         <>
           <Avatar size={32} icon={<img src={`${user.avatar.url}`} />} />
-          {user.role == "admin" ? (
+          {user.role === "admin" || user.role === "Admin" ? (
             <Select
               onChange={handleChangeSelect}
               defaultValue={`Hi ${nameUser}`}

@@ -1,8 +1,9 @@
-import { Modal } from "antd";
-import type { FormProps } from "antd";
+import { Col, Image, Modal, Row, Upload } from "antd";
+import type { FormProps, GetProp, UploadFile, UploadProps } from "antd";
 import { Button, Form, Input } from "antd";
 import { APIUpdateUserById } from "../../../services/api";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { PlusOutlined } from "@ant-design/icons";
 
 type PropModalUpdateUser = {
   isModalUpdateUserOpen: boolean;
@@ -21,8 +22,10 @@ type FieldTypeForm = {
   name: string;
   email: string;
   role: string;
+  avatar: string;
 };
 
+type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 const ModalUpdateUser = ({
   isModalUpdateUserOpen,
   handleOkModalUpdateUser,
@@ -32,6 +35,42 @@ const ModalUpdateUser = ({
   getAllUserTable,
 }: PropModalUpdateUser) => {
   const [form] = Form.useForm();
+  const [fileList, setFileList] = useState<UploadFile[]>([]);
+  const [previewOpen, setPreviewOpen] = useState(false);
+  const [avatar, setAvatar] = useState<string>("");
+  const [previewImage, setPreviewImage] = useState("");
+
+  const getBase64 = (file: FileType): Promise<string> =>
+    new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = (error) => reject(error);
+    });
+  const handlePreview = async (file: UploadFile) => {
+    if (!file.url && !file.preview) {
+      file.preview = await getBase64(file.originFileObj as FileType);
+    }
+    setPreviewImage(file.url || (file.preview as string));
+    setPreviewOpen(true);
+  };
+
+  const dummyRequest = ({ file, onSuccess }: any) => {
+    console.log("check file", file);
+    form.setFieldsValue({ avatar: file as string });
+    setAvatar(file as string);
+    onSuccess("ok");
+  };
+
+  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) =>
+    setFileList(newFileList);
+
+  const uploadButton = (
+    <button style={{ border: 0, background: "none" }} type="button">
+      <PlusOutlined />
+      <div style={{ marginTop: 8 }}>Upload</div>
+    </button>
+  );
 
   useEffect(() => {
     form.setFieldsValue(dataUserUpdate);
@@ -44,7 +83,8 @@ const ModalUpdateUser = ({
       dataUserUpdate.id,
       values.name,
       values.email,
-      values.role
+      values.role,
+      values.avatar
     );
     console.log(res);
     if (res && res.data) {
@@ -66,6 +106,7 @@ const ModalUpdateUser = ({
       onOk={handleOkModalUpdateUser}
       onCancel={handleCancelModalUpdateUser}
       okButtonProps={{ style: { backgroundColor: "#167fff" } }}
+      width={600}
     >
       <Form
         form={form}
@@ -78,28 +119,69 @@ const ModalUpdateUser = ({
         onFinishFailed={onFinishFailed}
         autoComplete="off"
       >
-        <Form.Item<FieldTypeForm>
-          label="Name"
-          name="name"
-          rules={[{ required: true, message: "Please input your name!" }]}
-        >
-          <Input />
-        </Form.Item>
-
-        <Form.Item<FieldTypeForm>
-          label="Email"
-          name="email"
-          rules={[{ required: true, message: "Please input your email!" }]}
-        >
-          <Input />
-        </Form.Item>
-        <Form.Item<FieldTypeForm>
-          label="Role"
-          name="role"
-          rules={[{ required: true, message: "Please input your role!" }]}
-        >
-          <Input />
-        </Form.Item>
+        <Row>
+          <Col span={12}>
+            <Form.Item<FieldTypeForm>
+              label="Name"
+              name="name"
+              rules={[{ required: true, message: "Please input your name!" }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item<FieldTypeForm>
+              label="Email"
+              name="email"
+              rules={[{ required: true, message: "Please input your email!" }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+        </Row>
+        <Row>
+          <Col span={12}>
+            <Form.Item<FieldTypeForm>
+              label="Role"
+              name="role"
+              rules={[{ required: true, message: "Please input your role!" }]}
+            >
+              <Input />
+            </Form.Item>
+          </Col>
+          <Col span={12}>
+            <Form.Item
+              label="Avatar"
+              name="avatar"
+              rules={[{ required: true, message: "Please upload an avatar!" }]}
+            >
+              <>
+                <Upload
+                  listType="picture-circle"
+                  fileList={fileList}
+                  onPreview={handlePreview}
+                  onChange={handleChange}
+                  customRequest={dummyRequest}
+                >
+                  {fileList.length >= 1 ? null : uploadButton}
+                </Upload>
+                {previewImage && (
+                  <Image
+                    wrapperStyle={{ display: "none" }}
+                    preview={{
+                      visible: previewOpen,
+                      onVisibleChange: (visible) => setPreviewOpen(visible),
+                      afterOpenChange: (visible) =>
+                        !visible && setPreviewImage(""),
+                    }}
+                    src={previewImage}
+                  />
+                )}
+                <Input type="hidden" name="avatar" value={avatar} />
+              </>
+            </Form.Item>
+          </Col>
+        </Row>
         <Form.Item wrapperCol={{ offset: 8, span: 16 }}>
           <Button className="bg-[#167fff]" type="primary" htmlType="submit">
             Update User

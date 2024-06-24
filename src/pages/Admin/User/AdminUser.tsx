@@ -448,6 +448,7 @@ const AdminUser: React.FC = () => {
         getAllUserTable={getAllUserTable}
       />
       <ModalCreateUser
+        setIsModalOpenModalCreateUser={setIsModalOpenModalCreateUser}
         isModalOpenModalCreateUser={isModalOpenModalCreateUser}
         handleOkModalCreateUser={handleOkModalCreateUser}
         handleCancelModalCreateUser={handleCancelModalCreateUser}

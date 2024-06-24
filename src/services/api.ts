@@ -63,13 +63,24 @@ export const APIUpdateUserById = (
   id: string,
   name: string,
   email: string,
-  role: string
+  role: string,
+  avatar: string
 ) => {
-  return axios.put(`/admin/users/${id}`, {
-    name: name,
-    email: email,
-    role: role,
-  });
+  const formData = new FormData();
+
+  // Append each field to formData
+  if (email) formData.append("email", email);
+  if (name) formData.append("name", name);
+  if (role) formData.append("role", role);
+
+  // Only append avatar if it exists
+  if (avatar) formData.append("avatar", avatar);
+
+  const config = {
+    headers: { "Content-Type": "multipart/form-data" },
+  };
+
+  return axios.put(`/admin/users/${id}`, formData, config);
 };
 export const APICreateOrder = (dataOrder: IDataCreateOrder) => {
   return axios.post("/orders/new", dataOrder);
@@ -92,7 +103,7 @@ export const APIMeOrderItemsDetail = (id: string) => {
 
 export const APICreateNewUser = (data: createUser) => {
   const formData = new FormData();
-
+  console.log("check data", data);
   // Append each field to formData
   if (data.email) formData.append("email", data.email);
   if (data.name) formData.append("name", data.name);
@@ -112,4 +123,24 @@ export const APICreateNewUser = (data: createUser) => {
 export const APICreateBulkUser = (data: DataExcel[]) => {
   return axios.post("/admin/users/bulk-create", data);
 };
+export const APICreateNewProduct = async (data: any) => {
+  const formData = new FormData();
+  console.log("check data", data);
+  formData.append("name", data.name);
+  formData.append("price", data.price);
+  formData.append("description", data.description);
+  formData.append("ratings", data.ratings);
+  formData.append("category", data.category);
+  formData.append("seller", data.seller);
+  formData.append("stock", data.stock);
 
+  data.images.map((image: string) => {
+    formData.append(`images`, image);
+  });
+
+  const config = {
+    headers: { "Content-Type": "multipart/form-data" },
+  };
+
+  return axios.post("/admin/products", formData, config);
+};

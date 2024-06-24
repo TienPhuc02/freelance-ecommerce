@@ -39,5 +39,13 @@ export const PrivateRoute: React.FC<ProtectedRouteProps> = ({ children }) => {
     getAccount();
   }, []);
   const role = useSelector((state: any) => state.account.role);
-  return <>{role === "admin" ? <div>{children}</div> : <NotFound />}</>;
+  return (
+    <>
+      {role === "admin" || role === "Admin" ? (
+        <div>{children}</div>
+      ) : (
+        <NotFound />
+      )}
+    </>
+  );
 };

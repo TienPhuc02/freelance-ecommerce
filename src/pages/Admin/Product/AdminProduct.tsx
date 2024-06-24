@@ -12,6 +12,7 @@ import Highlighter from "react-highlight-words";
 import { APIGetAllProduct, APIGetDetailProduct } from "../../../services/api";
 import { convertDateCol } from "../../../utils/func.customize.date";
 import DrawerProduct from "./DrawerProduct";
+import ModalCreateProduct from "./ModalCreateProduct";
 
 interface DataProductType {
   _id: string;
@@ -36,6 +37,8 @@ const AdminProduct = () => {
   const [searchText, setSearchText] = useState("");
   const [openDrawer, setOpenDrawer] = useState(false);
   const [searchedColumn, setSearchedColumn] = useState("");
+  const [isModalOpenModalCreateProduct, setIsModalOpenModalCreateProduct] =
+    useState(false);
   const [listProduct, setListProduct] = useState<DataProductType[]>([]);
   const searchInput = useRef<InputRef>(null);
   const [dataProductView, setDataProductView] = useState({
@@ -59,6 +62,17 @@ const AdminProduct = () => {
 
   const onCloseDrawer = () => {
     setOpenDrawer(false);
+  };
+  const showModalCreateProduct = () => {
+    setIsModalOpenModalCreateProduct(true);
+  };
+
+  const handleOkModalCreateProduct = () => {
+    setIsModalOpenModalCreateProduct(false);
+  };
+
+  const handleCancelModalCreateProduct = () => {
+    setIsModalOpenModalCreateProduct(false);
   };
   const getAllListProduct = async () => {
     const res = await APIGetAllProduct();
@@ -259,6 +273,14 @@ const AdminProduct = () => {
       sortDirections: ["descend", "ascend"],
     },
     {
+      title: "Seller",
+      dataIndex: "seller",
+      key: "seller",
+      ...getColumnSearchProps("seller"),
+      sorter: (a, b) => a.seller.length - b.seller.length,
+      sortDirections: ["descend", "ascend"],
+    },
+    {
       title: "Created At",
       dataIndex: "createdAt",
       sorter: (a, b) =>
@@ -285,8 +307,14 @@ const AdminProduct = () => {
   ) => {
     console.log("params", pagination, filters, sorter, extra);
   };
+
   return (
     <>
+      <div className="btn-export btn-import mb-4 btn-create flex justify-end">
+        <Button type="primary" className="" onClick={showModalCreateProduct}>
+          Create New Product
+        </Button>
+      </div>
       <Table
         loading={isLoading}
         onChange={onChange}
@@ -307,6 +335,12 @@ const AdminProduct = () => {
         openDrawer={openDrawer}
         dataProductView={dataProductView}
         convertDateCol={convertDateCol}
+      />
+      <ModalCreateProduct
+        setIsModalOpenModalCreateProduct={setIsModalOpenModalCreateProduct}
+        isModalOpenModalCreateProduct={isModalOpenModalCreateProduct}
+        handleOkModalCreateProduct={handleOkModalCreateProduct}
+        handleCancelModalCreateProduct={handleCancelModalCreateProduct}
       />
     </>
   );

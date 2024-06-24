@@ -60,3 +60,31 @@ export const SELECT_COUNTRY = [
   { value: "czech_republic", label: "Czech Republic" },
   { value: "hungary", label: "Hungary" },
 ];
+
+export const SELECT_CATEGORY = [
+  { value: "Electronics", label: "Electronics" },
+  { value: "Cameras", label: "Cameras" },
+  { value: "Laptops", label: "Laptops" },
+  { value: "Accessories", label: "Accessories" },
+  { value: "Headphones", label: "Headphones" },
+  { value: "Food", label: "Food" },
+  { value: "Books", label: "Books" },
+  { value: "Sports", label: "Sports" },
+  { value: "Outdoor", label: "Outdoor" },
+  { value: "Home", label: "Home" },
+];
+export const SELECT_SELLER = [
+  { value: "ebay", label: "Ebay" },
+  { value: "amazon", label: "Amazon" },
+  {
+    value: "kauffmans-fruit-farm-market",
+    label: "Kauffman's Fruit Farm & Market",
+  },
+  { value: "samsung", label: "Samsung" },
+  { value: "gopro", label: "GoPro" },
+  { value: "fitbit", label: "Fitbit" },
+  { value: "dell", label: "Dell" },
+  { value: "sony", label: "Sony" },
+  { value: "microsoft", label: "Microsoft" },
+  { value: "logitech", label: "Logitech" },
+];

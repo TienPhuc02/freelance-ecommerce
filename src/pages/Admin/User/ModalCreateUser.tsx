@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Col, Modal, Row } from "antd";
+import { Col, Modal, Row, Select } from "antd";
 import type { FormProps, GetProp } from "antd";
 import { Button, Form, Input } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
@@ -11,12 +11,14 @@ type TypePropModalCreateUser = {
   handleOkModalCreateUser: () => void;
   handleCancelModalCreateUser: () => void;
   isModalOpenModalCreateUser: boolean;
+  setIsModalOpenModalCreateUser: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const ModalCreateUser = ({
   handleOkModalCreateUser,
   handleCancelModalCreateUser,
   isModalOpenModalCreateUser,
+  setIsModalOpenModalCreateUser,
 }: TypePropModalCreateUser) => {
   type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
 
@@ -38,6 +40,7 @@ const ModalCreateUser = ({
     console.log("Success:", values);
     const res = await APICreateNewUser({ ...values, avatar });
     console.log("check res", res);
+    setIsModalOpenModalCreateUser(false);
   };
 
   const handlePreview = async (file: UploadFile) => {
@@ -117,9 +120,16 @@ const ModalCreateUser = ({
               <Form.Item
                 label="Role"
                 name="role"
-                rules={[{ required: true, message: "Please input your role!" }]}
+                rules={[{ required: true, message: "Please input your Role!" }]}
               >
-                <Input />
+                <Select
+                  allowClear
+                  options={[
+                    { value: "admin", label: "Admin" },
+                    { value: "user", label: "User" },
+                  ]}
+                  className="border rounded-lg"
+                />
               </Form.Item>
             </Col>
             <Col span={12}>
