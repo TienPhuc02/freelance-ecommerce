@@ -17,6 +17,7 @@ import {
 import { convertDateCol } from "../../../utils/func.customize.date";
 import DrawerProduct from "./DrawerProduct";
 import ModalCreateProduct from "./ModalCreateProduct";
+import ModalUpdateProduct from "./ModalUpdateProduct";
 
 interface DataProductType {
   _id: string;
@@ -60,6 +61,21 @@ const AdminProduct = () => {
     createdAt: "",
     updatedAt: "",
   });
+  const [dataProductUpdate, setDataProductUpdate] = useState({
+    id: "",
+    name: "",
+    price: 0,
+    description: "",
+    ratings: 0,
+    images: [],
+    seller: "",
+    numOfReview: 0,
+    category: "",
+    stock: 0,
+    reviews: [],
+  });
+  const [isModalUpdateProductOpen, setIsModalUpdateProductOpen] =
+    useState(false);
   const showDrawer = async () => {
     setOpenDrawer(true);
   };
@@ -78,6 +94,35 @@ const AdminProduct = () => {
   const handleCancelModalCreateProduct = () => {
     setIsModalOpenModalCreateProduct(false);
   };
+  const handleShowModalUpdateProduct = async (id: string) => {
+    const res = await APIGetDetailProduct(id);
+    console.log("check res update product", res);
+    if (res && res?.data) {
+      setDataProductUpdate({
+        id: res.data.getProductDetails._id,
+        name: res.data.getProductDetails.name,
+        price: res.data.getProductDetails.price,
+        description: res.data.getProductDetails.description,
+        ratings: res.data.getProductDetails.ratings,
+        images: res.data.getProductDetails.images,
+        seller: res.data.getProductDetails.seller,
+        numOfReview: res.data.getProductDetails.numOfReview,
+        category: res.data.getProductDetails.category,
+        stock: res.data.getProductDetails.stock,
+        reviews: res.data.getProductDetails.reviews,
+      });
+      setIsModalUpdateProductOpen(true);
+    }
+  };
+
+  const handleOkModalUpdateProduct = () => {
+    setIsModalUpdateProductOpen(false);
+  };
+
+  const handleCancelModalUpdateProduct = () => {
+    setIsModalUpdateProductOpen(false);
+  };
+
   const getAllListProduct = async () => {
     const res = await APIGetAllProduct();
     console.log("check res", res);
@@ -327,10 +372,9 @@ const AdminProduct = () => {
                 Delete
               </Button>
             </Popconfirm>
-            {/* <Button onClick={() => handleShowModalUpdateUser(record)}>
+            <Button onClick={() => handleShowModalUpdateProduct(record)}>
               Update
-            </Button> */}
-            <Button>Update</Button>
+            </Button>
           </div>
         );
       },
@@ -378,6 +422,14 @@ const AdminProduct = () => {
         isModalOpenModalCreateProduct={isModalOpenModalCreateProduct}
         handleOkModalCreateProduct={handleOkModalCreateProduct}
         handleCancelModalCreateProduct={handleCancelModalCreateProduct}
+        getAllListProduct={getAllListProduct}
+      />
+      <ModalUpdateProduct
+        isModalUpdateProductOpen={isModalUpdateProductOpen}
+        handleOkModalUpdateProduct={handleOkModalUpdateProduct}
+        handleCancelModalUpdateProduct={handleCancelModalUpdateProduct}
+        dataProductUpdate={dataProductUpdate}
+        setIsLoading={setIsLoading}
         getAllListProduct={getAllListProduct}
       />
     </>

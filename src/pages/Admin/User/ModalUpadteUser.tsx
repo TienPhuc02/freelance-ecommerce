@@ -16,8 +16,13 @@ type PropModalUpdateUser = {
     email: string;
     role: string;
     id: string;
+    avatar: {
+      public_id: string;
+      url: string;
+    };
   };
 };
+
 type FieldTypeForm = {
   name: string;
   email: string;
@@ -26,6 +31,7 @@ type FieldTypeForm = {
 };
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
+
 const ModalUpdateUser = ({
   isModalUpdateUserOpen,
   handleOkModalUpdateUser,
@@ -37,7 +43,7 @@ const ModalUpdateUser = ({
   const [form] = Form.useForm();
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [previewOpen, setPreviewOpen] = useState(false);
-  const [avatar, setAvatar] = useState<string>("");
+  const [avatar, setAvatar] = useState<string>(dataUserUpdate.avatar.url);
   const [previewImage, setPreviewImage] = useState("");
 
   const getBase64 = (file: FileType): Promise<string> =>
@@ -47,6 +53,7 @@ const ModalUpdateUser = ({
       reader.onload = () => resolve(reader.result as string);
       reader.onerror = (error) => reject(error);
     });
+
   const handlePreview = async (file: UploadFile) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj as FileType);
@@ -56,14 +63,19 @@ const ModalUpdateUser = ({
   };
 
   const dummyRequest = ({ file, onSuccess }: any) => {
-    console.log("check file", file);
     form.setFieldsValue({ avatar: file as string });
     setAvatar(file as string);
     onSuccess("ok");
   };
 
-  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) =>
+  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
+    if (newFileList.length > 0 && newFileList[0].originFileObj) {
+      setAvatar(newFileList[0].originFileObj as any);
+    } else {
+      setAvatar(dataUserUpdate.avatar.url);
+    }
+  };
 
   const uploadButton = (
     <button style={{ border: 0, background: "none" }} type="button">
@@ -74,10 +86,19 @@ const ModalUpdateUser = ({
 
   useEffect(() => {
     form.setFieldsValue(dataUserUpdate);
+    setAvatar(dataUserUpdate.avatar.url);
+
+    setFileList([
+      {
+        uid: "-1",
+        name: "avatar.png",
+        status: "done",
+        url: dataUserUpdate.avatar.url,
+      },
+    ]);
   }, [dataUserUpdate, form]);
-  console.log(dataUserUpdate);
+
   const onFinish: FormProps<FieldTypeForm>["onFinish"] = async (values) => {
-    console.log("Success:", values);
     setIsLoading(true);
     const res = await APIUpdateUserById(
       dataUserUpdate.id,
@@ -86,7 +107,6 @@ const ModalUpdateUser = ({
       values.role,
       values.avatar
     );
-    console.log(res);
     if (res && res.data) {
       handleCancelModalUpdateUser();
       getAllUserTable();
@@ -99,6 +119,7 @@ const ModalUpdateUser = ({
   ) => {
     console.log("Failed:", errorInfo);
   };
+
   return (
     <Modal
       title="Update User Modal"
@@ -165,18 +186,15 @@ const ModalUpdateUser = ({
                 >
                   {fileList.length >= 1 ? null : uploadButton}
                 </Upload>
-                {previewImage && (
-                  <Image
-                    wrapperStyle={{ display: "none" }}
-                    preview={{
-                      visible: previewOpen,
-                      onVisibleChange: (visible) => setPreviewOpen(visible),
-                      afterOpenChange: (visible) =>
-                        !visible && setPreviewImage(""),
-                    }}
-                    src={previewImage}
-                  />
-                )}
+                <Image
+                  preview={{
+                    visible: previewOpen,
+                    onVisibleChange: (visible) => setPreviewOpen(visible),
+                    afterOpenChange: (visible) =>
+                      !visible && setPreviewImage(""),
+                  }}
+                  src={previewImage}
+                />
                 <Input type="hidden" name="avatar" value={avatar} />
               </>
             </Form.Item>

@@ -55,6 +55,10 @@ const AdminUser: React.FC = () => {
     name: "",
     email: "",
     role: "",
+    avatar: {
+      public_id: "",
+      url: "",
+    },
   });
   const [isModalUpdateUserOpen, setIsModalUpdateUserOpen] = useState(false);
   const [isModalOpenModalCreateUser, setIsModalOpenModalCreateUser] =
@@ -98,6 +102,7 @@ const AdminUser: React.FC = () => {
         id: res.data?.user?._id,
         role: res.data?.user?.role,
         email: res.data?.user?.email,
+        avatar:res.data?.user.avatar
       });
 
       setIsModalUpdateUserOpen(true);
