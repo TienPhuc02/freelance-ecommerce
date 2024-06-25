@@ -79,7 +79,7 @@ export const APIUpdateUserById = (
   const config = {
     headers: { "Content-Type": "multipart/form-data" },
   };
-
+  console.log(avatar);
   return axios.put(`/admin/users/${id}`, formData, config);
 };
 export const APICreateOrder = (dataOrder: IDataCreateOrder) => {
@@ -146,4 +146,26 @@ export const APICreateNewProduct = (data: any) => {
 };
 export const APIDeleteProduct = (id: string) => {
   return axios.delete(`/admin/products/${id}`);
+};
+
+export const APIUpdateProduct = (data: any) => {
+  const formData = new FormData();
+  console.log("check data", data);
+  formData.append("name", data.name);
+  formData.append("price", data.price);
+  formData.append("description", data.description);
+  formData.append("ratings", data.ratings);
+  formData.append("category", data.category);
+  formData.append("seller", data.seller);
+  formData.append("stock", data.stock);
+
+  data?.images?.map((image: string) => {
+    formData.append(`images`, image);
+  });
+
+  const config = {
+    headers: { "Content-Type": "multipart/form-data" },
+  };
+
+  return axios.put(`/admin/products/${data.id}`, formData, config);
 };

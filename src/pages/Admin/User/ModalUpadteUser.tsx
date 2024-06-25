@@ -87,7 +87,6 @@ const ModalUpdateUser = ({
   useEffect(() => {
     form.setFieldsValue(dataUserUpdate);
     setAvatar(dataUserUpdate.avatar.url);
-
     setFileList([
       {
         uid: "-1",

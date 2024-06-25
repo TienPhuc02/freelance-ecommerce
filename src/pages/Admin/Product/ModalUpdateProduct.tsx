@@ -1,7 +1,7 @@
 import { Col, Image, Modal, Row, Select, Upload } from "antd";
 import type { FormProps, GetProp, UploadFile, UploadProps } from "antd";
 import { Button, Form, Input } from "antd";
-import { APIGetDetailProduct } from "../../../services/api";
+import { APIUpdateProduct } from "../../../services/api";
 import { useEffect, useState } from "react";
 import { PlusOutlined } from "@ant-design/icons";
 import {
@@ -21,7 +21,7 @@ type PropModalUpdateProduct = {
     price: number;
     description: string;
     ratings: number;
-    images: Image[];
+    images: { url: string }[];
     category: string;
     seller: string;
     stock: number;
@@ -31,6 +31,7 @@ type PropModalUpdateProduct = {
     updatedAt?: string;
   };
 };
+
 type FieldTypeForm = {
   name: string;
   email: string;
@@ -39,6 +40,7 @@ type FieldTypeForm = {
 };
 
 type FileType = Parameters<GetProp<UploadProps, "beforeUpload">>[0];
+
 const ModalUpdateProduct = ({
   isModalUpdateProductOpen,
   handleOkModalUpdateProduct,
@@ -51,7 +53,7 @@ const ModalUpdateProduct = ({
   const [fileList, setFileList] = useState<UploadFile[]>([]);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
-
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
   const getBase64 = (file: FileType): Promise<string> =>
     new Promise((resolve, reject) => {
       const reader = new FileReader();
@@ -68,13 +70,18 @@ const ModalUpdateProduct = ({
   };
 
   const dummyRequest = ({ file, onSuccess }: any) => {
-    console.log("check file", file);
-    form.setFieldsValue({ avatar: file as string });
+    form.setFieldsValue({ images: file as File });
+    setUploadedFiles((prevState) => [...prevState, file.originFileObj]);
     onSuccess("ok");
   };
-
-  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) =>
+  const handleChange: UploadProps["onChange"] = ({ fileList: newFileList }) => {
     setFileList(newFileList);
+
+    const files = newFileList.map((file) => file.originFileObj as File);
+    setUploadedFiles(files);
+
+    form.setFieldsValue({ images: newFileList }); // Update form field with new fileList
+  };
 
   const uploadButton = (
     <button style={{ border: 0, background: "none" }} type="button">
@@ -82,28 +89,31 @@ const ModalUpdateProduct = ({
       <div style={{ marginTop: 8 }}>Upload</div>
     </button>
   );
-
+  console.log("check dataProductUpdate", dataProductUpdate);
   useEffect(() => {
     form.setFieldsValue(dataProductUpdate);
+    const initialFileList = dataProductUpdate?.images?.map((image, index) => ({
+      key: index,
+      uid: String(index),
+      name: `image-${index}.png`,
+      status: "done",
+      url: image.url,
+    }));
+    setFileList(initialFileList as any);
   }, [dataProductUpdate, form]);
-  console.log("check data product update", dataProductUpdate);
+
   const onFinish: FormProps<FieldTypeForm>["onFinish"] = async (values) => {
-    console.log("Success:", values);
     setIsLoading(true);
-    const res = await APIGetDetailProduct(
-      dataProductUpdate.id
-      // values.name,
-      // values.email,
-      // values.role,
-      // values.avatar
-    );
-    console.log(res);
+    const formData = { ...values, images: uploadedFiles };
+    console.log("check fromData", formData);
+    const res = await APIUpdateProduct(formData);
     if (res && res.data) {
       handleCancelModalUpdateProduct();
       getAllListProduct();
       setIsLoading(false);
     }
   };
+
   const { TextArea } = Input;
 
   const onChange = (
@@ -111,11 +121,13 @@ const ModalUpdateProduct = ({
   ) => {
     console.log("Change:", e.target.value);
   };
+
   const onFinishFailed: FormProps<FieldTypeForm>["onFinishFailed"] = (
     errorInfo
   ) => {
     console.log("Failed:", errorInfo);
   };
+
   return (
     <Modal
       title="Update Product Modal"
@@ -220,35 +232,42 @@ const ModalUpdateProduct = ({
             </Form.Item>
           </Col>
         </Row>
+        <Row>
+          <Col span={12}>
+            <Form.Item label="Id" name="id">
+              <Input disabled />
+            </Form.Item>
+          </Col>
+        </Row>
+
         <Form.Item
           label="Images Product"
           name="images"
           rules={[{ required: true, message: "Please upload images!" }]}
         >
-          <>
-            <Upload
-              multiple={true}
-              listType="picture-circle"
-              fileList={fileList}
-              onPreview={handlePreview}
-              onChange={handleChange}
-              customRequest={dummyRequest}
-            >
-              {fileList.length >= 5 ? null : uploadButton}
-            </Upload>
-            {previewImage && (
-              <Image
-                wrapperStyle={{ display: "none" }}
-                preview={{
-                  visible: previewOpen,
-                  onVisibleChange: (visible) => setPreviewOpen(visible),
-                  afterOpenChange: (visible) => !visible && setPreviewImage(""),
-                }}
-                src={previewImage}
-              />
-            )}
-          </>
+          <Upload
+            multiple={true}
+            listType="picture-circle"
+            fileList={fileList}
+            onPreview={handlePreview}
+            onChange={handleChange}
+            customRequest={dummyRequest}
+          >
+            {fileList.length >= 5 ? null : uploadButton}
+          </Upload>
         </Form.Item>
+
+        {previewImage && (
+          <Image
+            wrapperStyle={{ display: "none" }}
+            preview={{
+              visible: previewOpen,
+              onVisibleChange: (visible) => setPreviewOpen(visible),
+              afterOpenChange: (visible) => !visible && setPreviewImage(""),
+            }}
+            src={previewImage}
+          />
+        )}
 
         <Form.Item
           label="Description"
