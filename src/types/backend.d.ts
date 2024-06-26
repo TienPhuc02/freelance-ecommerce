@@ -106,4 +106,56 @@ declare global {
     role: string;
     password?: string | number;
   }
+  interface OrderTable {
+    _id: string;
+    paymentMethod: string;
+    itemsPrice: number;
+    taxAmount: number;
+    shippingAmount: number;
+    totalAmount: number;
+    orderStatus: string;
+    createdAt: Date;
+    updatedAt: Date;
+    __v: number;
+  }
+  interface OrderViewDrawer {
+    shippingInfo: {
+      address: string;
+      city: string;
+      phoneNumber: string;
+      zipCode: string;
+      country: string;
+    };
+    paymentInfo: {
+      status: string;
+    };
+    _id: string;
+    user: {
+      avatar: Avatar;
+      _id: string;
+      name: string;
+      email: string;
+      role: string;
+      createdAt: string;
+      updatedAt: string;
+      __v: number;
+      resetPasswordExpire: string;
+      resetPasswordToken: string;
+    };
+    orderItems: {
+      name: string;
+      quantity: string;
+      price: string;
+      product: Product;
+      _id: string;
+    }[];
+    paymentMethod: string;
+    itemsPrice: number;
+    taxAmount: number;
+    shippingAmount: number;
+    totalAmount: number;
+    orderStatus: string;
+    createdAt: string;
+    updatedAt: string;
+  }
 }

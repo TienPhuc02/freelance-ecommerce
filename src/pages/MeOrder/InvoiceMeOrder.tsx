@@ -129,7 +129,7 @@ const InvoiceMeOrder = () => {
           <div className="logo-invoice flex justify-center items-center flex-col">
             <img
               className="h-[100px] w-[100px] mr-[12px]"
-              src="/public/logo_invoice.svg"
+              src="/logo_invoice.svg"
               alt="Shop Logo"
             />
             <div className="title-shop mt-3 text-[25px] font-semibold">

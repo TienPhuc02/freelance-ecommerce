@@ -32,46 +32,6 @@ const Payment = ({ dataOrder, setDataOrder }: IPropsPayment) => {
     }));
   };
 
-  // const handleSubmitCreateOrder = async () => {
-  //   if (selectedValue === "COD") {
-  //     // Xử lý Thanh toán khi giao hàng
-  //     const res = await APICreateOrderCOD(dataOrder);
-  //     console.log(res);
-  //     dispatch(doClearCart());
-  //     navigate("/me/orders");
-  //   } else if (selectedValue === "Card") {
-  //     // Xử lý thanh toán Stripe
-  //     const response = await APIPaymentStripeSession(dataOrder);
-
-  //     if (!response) {
-  //       notification.error({
-  //         message: "Lỗi",
-  //         description: "Không thể tạo phiên thanh toán của Stripe.",
-  //       });
-  //       return;
-  //     }
-
-  //     const { sessionId } = response; // sessionId trả về từ APIPaymentStripeSession
-
-  //     const stripe = await stripePromise;
-
-  //     if (stripe) {
-  //       const { error } = await stripe.redirectToCheckout({
-  //         sessionId: sessionId,
-  //       });
-  //       //https://docs.stripe.com/testing#cards
-  //       //4242424242424242
-  //       if (error) {
-  //         console.error(
-  //           "Lỗi khi chuyển hướng đến trang thanh toán của Stripe:",
-  //           error
-  //         );
-  //       } else {
-  //         dispatch(doClearCart());
-  //       }
-  //     }
-  //   }
-  // };
 
   const handleSubmitCreateOrder = async () => {
     if (selectedValue === "COD") {

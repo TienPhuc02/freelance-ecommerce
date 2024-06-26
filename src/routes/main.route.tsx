@@ -13,7 +13,7 @@ import CheckOutPage from "../pages/CheckOut/CheckOut";
 import MeOrder from "../pages/MeOrder/MeOrder";
 import MeOrderDetail from "../pages/MeOrder/MeOrderDetail";
 import AdminDashBoard from "../pages/Admin/DashBoard/admin.dashboard";
-import AdminOrder from "../pages/Admin/Order/admin.order";
+import AdminOrder from "../pages/Admin/Order/AdminOrder";
 import AdminProduct from "../pages/Admin/Product/AdminProduct";
 import AdminUser from "../pages/Admin/User/AdminUser";
 import InvoiceMeOrder from "../pages/MeOrder/InvoiceMeOrder";

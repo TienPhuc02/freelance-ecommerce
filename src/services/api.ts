@@ -169,3 +169,7 @@ export const APIUpdateProduct = (data: any) => {
 
   return axios.put(`/admin/products/${data.id}`, formData, config);
 };
+
+export const APIAllOrdersAdmin = () => {
+  return axios.get("/admin/orders");
+};
