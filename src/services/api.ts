@@ -173,3 +173,14 @@ export const APIUpdateProduct = (data: any) => {
 export const APIAllOrdersAdmin = () => {
   return axios.get("/admin/orders");
 };
+export const APICreateComment = ({
+  productId,
+  rating,
+  comment,
+}: {
+  productId: string;
+  rating: number;
+  comment: string;
+}) => {
+  return axios.put("/reviews", { productId, rating, comment });
+};

@@ -7,6 +7,7 @@ import { Form, InputNumberProps, message } from "antd";
 import { useDispatch } from "react-redux";
 import { doProductAction } from "../../redux/features/order/orderSlice";
 import { useSelector } from "react-redux";
+import CommentProduct from "../../Components/DetailProduct/CommentProduct";
 
 const DetailProductPage = () => {
   const [images, setImages] = useState<any[]>([]);
@@ -15,6 +16,7 @@ const DetailProductPage = () => {
   const dispatch = useDispatch();
   const [valueQuantityNumber, setValueQuantityNumber] = useState(0);
   const { slug } = useParams<string>();
+  console.log("check slug", slug);
   const listProductOrder = useSelector((state: any) => state.order.cart);
   console.log(listProductOrder);
   const IncreaseInput = () => {
@@ -84,19 +86,28 @@ const DetailProductPage = () => {
     getProductDetail();
   }, []);
   console.log(valueQuantityNumber);
+  const user = useSelector((state: any) => state.account);
+  console.log("check user detail product>>", user);
   return (
-    <div className="max-w-[1200px] mx-auto pt-3 flex ">
-      <SlickDetail images={images} />
-      <InforDetailProduct
-        productDetail={productDetail}
-        DecreaseInput={DecreaseInput}
-        IncreaseInput={IncreaseInput}
-        valueQuantityNumber={valueQuantityNumber}
-        form={form}
-        onChange={onChange}
-        handleAddProduct={handleAddProduct}
-      />
-    </div>
+    <>
+      <div className="max-w-[1200px] mx-auto pt-3 flex ">
+        <SlickDetail images={images} />
+        <InforDetailProduct
+          productDetail={productDetail}
+          DecreaseInput={DecreaseInput}
+          IncreaseInput={IncreaseInput}
+          valueQuantityNumber={valueQuantityNumber}
+          form={form}
+          onChange={onChange}
+          handleAddProduct={handleAddProduct}
+        />
+      </div>
+      {user.name !== "" && slug !== undefined && (
+        <div className="max-w-[1200px] mx-auto mt-9 flex">
+          <CommentProduct slug={slug} />
+        </div>
+      )}
+    </>
   );
 };
 
