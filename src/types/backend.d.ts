@@ -158,4 +158,24 @@ declare global {
     createdAt: string;
     updatedAt: string;
   }
+  interface CommentProduct {
+    user: {
+      avatar: {
+        public_id: string;
+        url: string;
+      };
+      _id: string;
+      name: string;
+      email: string;
+      role: string;
+      createdAt: string;
+      updatedAt: string;
+      __v: number;
+      resetPasswordExpire: string;
+      resetPasswordToken: string;
+    };
+    comment: string;
+    rating: number;
+    _id: string;
+  }
 }

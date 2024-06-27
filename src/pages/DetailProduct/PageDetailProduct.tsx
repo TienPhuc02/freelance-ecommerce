@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from "react";
 import SlickDetail from "../../Components/DetailProduct/SlickDetails";
 import { useParams } from "react-router-dom";
-import { APIGetDetailProduct } from "../../services/api";
+import {
+  APIGetDetailProduct,
+  APIGetListCommentProduct,
+} from "../../services/api";
 import InforDetailProduct from "../../Components/DetailProduct/InforDetailProduct";
 import { Form, InputNumberProps, message } from "antd";
 import { useDispatch } from "react-redux";
@@ -15,6 +18,9 @@ const DetailProductPage = () => {
   const [form] = Form.useForm();
   const dispatch = useDispatch();
   const [valueQuantityNumber, setValueQuantityNumber] = useState(0);
+  const [listCommentProduct, setListCommentProduct] = useState<
+    CommentProduct[]
+  >([]);
   const { slug } = useParams<string>();
   console.log("check slug", slug);
   const listProductOrder = useSelector((state: any) => state.order.cart);
@@ -82,9 +88,20 @@ const DetailProductPage = () => {
       );
     }
   };
+  const getListCommentProduct = async () => {
+    if (slug) {
+      const res = await APIGetListCommentProduct(slug);
+      console.log("check res list comment>>", res.data.reviews);
+      if (res && res.data) {
+        setListCommentProduct(res.data.reviews);
+      }
+    }
+  };
   useEffect(() => {
     getProductDetail();
+    getListCommentProduct();
   }, []);
+
   console.log(valueQuantityNumber);
   const user = useSelector((state: any) => state.account);
   console.log("check user detail product>>", user);
@@ -104,7 +121,7 @@ const DetailProductPage = () => {
       </div>
       {user.name !== "" && slug !== undefined && (
         <div className="max-w-[1200px] mx-auto mt-9 flex">
-          <CommentProduct slug={slug} />
+          <CommentProduct slug={slug} listCommentProduct={listCommentProduct} getListCommentProduct={getListCommentProduct} />
         </div>
       )}
     </>

@@ -184,3 +184,7 @@ export const APICreateComment = ({
 }) => {
   return axios.put("/reviews", { productId, rating, comment });
 };
+
+export const APIGetListCommentProduct = (id: string) => {
+  return axios.get(`/reviews?id=${id}`);
+};
