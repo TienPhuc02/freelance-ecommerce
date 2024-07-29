@@ -1,15 +1,17 @@
 import React, { useEffect, useRef, useState } from "react";
-import { SearchOutlined } from "@ant-design/icons";
+import { QuestionCircleOutlined, SearchOutlined } from "@ant-design/icons";
 import type { InputRef, TableColumnsType, TableColumnType } from "antd";
-import { Button, Input, Space, Table, message } from "antd";
+import { Button, Input, Popconfirm, Space, Table, message } from "antd";
 import type { FilterDropdownProps } from "antd/es/table/interface";
 import Highlighter from "react-highlight-words";
 import {
   APIAllOrdersAdmin,
+  APIDeleteOrderById,
   APIMeOrderItemsDetail,
 } from "../../../services/api";
 import { convertDateCol } from "../../../utils/func.customize.date";
 import DrawerOrder from "./DrawerOrder";
+import ModalUpdateOrder from "./ModalUpdateOrder";
 
 type DataIndex = keyof OrderTable;
 
@@ -86,11 +88,97 @@ const AdminOrder = () => {
     createdAt: "",
     updatedAt: "",
   });
-
+  const [dataOrderUpdate, setDataOrderUpdate] = useState<OrderUpdate>({
+    shippingInfo: {
+      address: "",
+      city: "",
+      phoneNumber: "",
+      zipCode: "",
+      country: "",
+    },
+    paymentInfo: {
+      status: "",
+    },
+    _id: "",
+    user: {
+      name: "",
+      email: "",
+    },
+    orderItems: [
+      {
+        name: "",
+        quantity: 0,
+        price: 0,
+        product: {
+          _id: "",
+          name: "",
+          price: 0,
+          description: "",
+          ratings: 0,
+          images: [
+            {
+              public_id: "",
+              url: "",
+              _id: "",
+            },
+          ],
+          category: "",
+          seller: "",
+          stock: 0,
+          numOfReview: 0,
+          reviews: [],
+          __v: 0,
+          createdAt: "",
+          updatedAt: "",
+        },
+        _id: "",
+      },
+    ],
+    paymentMethod: "",
+    itemsPrice: 0,
+    taxAmount: 0,
+    shippingAmount: 0,
+    totalAmount: 0,
+    orderStatus: "",
+    createdAt: "",
+    updatedAt: "",
+  });
+  const [isModalUpdateOrderOpen, setIsModalUpdateOrderOpen] = useState(false);
+  const handleCancelModalUpdateOrder = () => {
+    setIsModalUpdateOrderOpen(false);
+  };
+  const handleShowModalUpdateOrder = async (id: string) => {
+    const res = await APIMeOrderItemsDetail(id);
+    if (res && res?.data) {
+      setDataOrderUpdate({
+        shippingInfo: res.data.order.shippingInfo,
+        paymentInfo: res.data.order.paymentInfo,
+        _id: res.data.order._id,
+        user: res.data.order.user,
+        orderItems: res.data.order.orderItems,
+        paymentMethod: res.data.order.paymentMethod,
+        itemsPrice: res.data.order.itemsPrice,
+        taxAmount: res.data.order.taxAmount,
+        shippingAmount: res.data.order.shippingAmount,
+        totalAmount: res.data.order.totalAmount,
+        orderStatus: res.data.order.orderStatus,
+        createdAt: res.data.order.createdAt,
+        updatedAt: res.data.order.updatedAt,
+      });
+      setIsModalUpdateOrderOpen(true);
+    }
+  };
   const showDrawer = async () => {
     setOpenDrawer(true);
   };
-
+  const handleDeleteOrder = async (id: string) => {
+    setIsLoading(true);
+    const res = await APIDeleteOrderById(id);
+    if (res && res.data) {
+      getAPIAllOrderAdmin();
+    }
+    setIsLoading(false);
+  };
   const onCloseDrawer = () => {
     setOpenDrawer(false);
   };
@@ -321,6 +409,31 @@ const AdminOrder = () => {
         return <>{convertDateCol(record)}</>;
       },
     },
+    {
+      title: "Action",
+      dataIndex: "_id",
+      render: (record: any) => {
+        return (
+          <div className="flex">
+            <Popconfirm
+              title="Delete This User"
+              description="Are you sure to delete this user?"
+              icon={<QuestionCircleOutlined style={{ color: "red" }} />}
+              onConfirm={() => handleDeleteOrder(record)}
+              okButtonProps={{ style: { backgroundColor: "#167fff" } }}
+              okText="Delete"
+            >
+              <Button type="primary" className="mr-3 bg-[#167fff]">
+                Delete
+              </Button>
+            </Popconfirm>
+            <Button onClick={() => handleShowModalUpdateOrder(record)}>
+              Update
+            </Button>
+          </div>
+        );
+      },
+    },
   ];
 
   useEffect(() => {
@@ -347,6 +460,12 @@ const AdminOrder = () => {
         openDrawer={openDrawer}
         dataOrderView={dataOrderView}
         convertDateCol={convertDateCol}
+      />
+      <ModalUpdateOrder
+        getAPIAllOrderAdmin={getAPIAllOrderAdmin}
+        dataOrderUpdate={dataOrderUpdate}
+        handleCancelModalUpdateOrder={handleCancelModalUpdateOrder}
+        isModalUpdateOrderOpen={isModalUpdateOrderOpen}
       />
     </>
   );

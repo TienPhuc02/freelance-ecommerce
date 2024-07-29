@@ -188,3 +188,9 @@ export const APICreateComment = ({
 export const APIGetListCommentProduct = (id: string) => {
   return axios.get(`/reviews?id=${id}`);
 };
+export const APIDeleteOrderById = (id: string) => {
+  return axios.delete(`/admin/orders/${id}`);
+};
+export const APIUpdateOrderById = (id: string, status: string) => {
+  return axios.put(`/admin/orders/${id}`, { orderStatus: status });
+};

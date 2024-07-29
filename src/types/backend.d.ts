@@ -178,4 +178,55 @@ declare global {
     rating: number;
     _id: string;
   }
+  type OrderUpdate = {
+    shippingInfo: {
+      address: string;
+      city: string;
+      phoneNumber: string;
+      zipCode: string;
+      country: string;
+    };
+    paymentInfo: {
+      status: string;
+    };
+    _id: string;
+    user: {
+      name: string;
+      email: string;
+    };
+    orderItems: Array<{
+      name: string;
+      quantity?: number; // Updated from string to number
+      price?: number; // Updated from string to number
+      product: {
+        _id: string;
+        name: string;
+        price: number;
+        description: string;
+        ratings: number;
+        images: Array<{
+          public_id: string;
+          url: string;
+          _id: string;
+        }>;
+        category: string;
+        seller: string;
+        stock: number;
+        numOfReview: number;
+        reviews: Array<any>;
+        __v: number;
+        createdAt: string;
+        updatedAt: string;
+      };
+      _id: string;
+    }>;
+    paymentMethod: string;
+    itemsPrice: number;
+    taxAmount: number;
+    shippingAmount: number;
+    totalAmount: number;
+    orderStatus: string;
+    createdAt: string;
+    updatedAt: string;
+  };
 }
